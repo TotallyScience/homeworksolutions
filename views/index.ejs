@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 
-<body>
-    <h1>
-        <%= text %>
-    </h1>
+<head>
+    <%- include('includes/head.ejs') %>
+</head>
 
-    <p>My first paragraph.</p>
+<body>
+    <%- include('includes/navbar.ejs') %>
+        <h1>
+            <%= text %>
+        </h1>
+
+        <p>My first paragraph.</p>
 </body>
 
 </html>
