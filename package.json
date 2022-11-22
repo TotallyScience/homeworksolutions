@@ -1,24 +1,25 @@
 {
-  "name": "homeworksolutions",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TotallyScience/homeworksolutions.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TotallyScience/homeworksolutions/issues"
-  },
-  "homepage": "https://github.com/TotallyScience/homeworksolutions#readme",
-  "dependencies": {
-    "ejs": "^3.1.8",
-    "express": "^4.18.2"
-  }
+    "name": "homeworksolutions",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TotallyScience/homeworksolutions.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/TotallyScience/homeworksolutions/issues"
+    },
+    "homepage": "https://github.com/TotallyScience/homeworksolutions#readme",
+    "dependencies": {
+        "ejs": "^3.1.8",
+        "express": "^4.18.2"
+    }
 }

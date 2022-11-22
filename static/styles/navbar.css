@@ -1,0 +1,123 @@
+#navbar {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: normal;
+    width: 100%;
+    height: 60px;
+    top: 0;
+    left: 0;
+    background-color: var(--light-color);
+    z-index: 99;
+}
+
+.nav-button {
+    float: left;
+    padding-right: 50px;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.nav-button a {
+    text-decoration: none;
+    font-size: 17px;
+    letter-spacing: 0.05rem;
+}
+
+#settings {
+    display: flex;
+    align-items: center;
+}
+
+.selected a {
+    border-bottom: 2px solid var(--dark-color);
+}
+
+#leftbar {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 70%;
+    height: 100%;
+    padding-left: 2%;
+}
+
+#leftbar p {
+    margin-left: 5px;
+    font-size: 17px;
+    letter-spacing: 0.05rem;
+    font-weight: bold;
+}
+
+#leftbar p span {
+    color: var(--accent-color);
+}
+
+#middlebar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#rightbar {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    text-align: right;
+    width: 70%;
+    height: 100%;
+    padding-right: 2%;
+}
+
+#rightbar a {
+    text-decoration: none;
+}
+
+#rightbar p {
+    font-size: 17px;
+    margin-left: 20px;
+}
+
+#rightbar p span {
+    color: #ffffff;
+    background-color: var(--accent-color);
+    padding: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 90px;
+}
+
+@media (max-width: 1050px) {
+    #rightbar {
+        display: none;
+    }
+    #middlebar {
+        justify-content: right;
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 675px) {
+    #middlebar {
+        position: absolute;
+        top: 0px;
+        justify-content: center;
+        width: 100%;
+        height: 50%;
+    }
+    #navbar {
+        height: 100px;
+    }
+    #leftbar {
+        margin-top: 45px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: 50%;
+        padding-left: 2%;
+    }
+}
