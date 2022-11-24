@@ -22,6 +22,14 @@ app.get('/helpers', (req, res) => {
     res.render('helpers');
 });
 
+app.get('/signup', (req, res) => {
+    res.render('signup');
+});
+
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
 

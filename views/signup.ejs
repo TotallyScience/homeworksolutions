@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('includes/head.ejs') %>
+        <link rel="stylesheet" href="styles/signup.css" />
+    </head>
+
+    <body>
+        <%- include('includes/navbar.ejs') %>
+        <div id="heading">
+            <p class="h1">Welcome to Homework Solutions</p>
+            <p class="h2">Create an account or <a href="/login">log in</a></p>
+        </div>
+        <div id="fields">
+            <form>
+                <label>Email</label>
+                <input type="email" />
+                <label
+                    >Username <span>(Choose something anonymous)</span></label
+                >
+                <input type="text" />
+                <label>Password</label>
+                <input type="password" />
+                <label>Confirm Password</label>
+                <input type="password" />
+                <p>
+                    By clicking the “Sign Up” button, you are creating a
+                    Homework Solutions account, and you agree to Mailchimp’s
+                    <a href="">Terms of Use</a> and
+                    <a href="">Privacy Policy</a>.
+                </p>
+                <button class="common-button" type="submit">Sign up</button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -26,6 +26,10 @@ label {
     font-family: 'Rubik', sans-serif;
 }
 
+p {
+    margin: 0%;
+}
+
 .not-selectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

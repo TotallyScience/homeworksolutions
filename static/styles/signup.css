@@ -1,0 +1,71 @@
+body {
+    margin-left: 150px;
+}
+
+#heading .h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#heading .h2 {
+    margin-top: 10px;
+    font-size: 1.6rem;
+}
+
+#heading .h2 a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+#heading .h2 a:hover {
+    text-decoration: underline;
+}
+
+#fields {
+    margin-top: 75px;
+}
+
+#fields form {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+}
+
+#fields form label {
+    margin-top: 15px;
+    display: block;
+    font-size: 1.3rem;
+}
+
+#fields form input {
+    margin-top: 5px;
+    width: 500px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    text-indent: 10px;
+}
+
+#fields form label span {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+#fields form button {
+    margin-top: 50px;
+    display: block;
+    align-self: center;
+}
+
+#fields form p {
+    margin-top: 15px;
+}
+
+#fields form p a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+#fields form p a:hover {
+    text-decoration: underline;
+}

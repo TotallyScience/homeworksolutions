@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('includes/head.ejs') %>
+        <link rel="stylesheet" href="styles/signup.css" />
+    </head>
+
+    <body>
+        <%- include('includes/navbar.ejs') %>
+        <div id="heading">
+            <p class="h1">Welcome back to Homework Solutions</p>
+            <p class="h2">Log in or <a href="/signup">create an account</a></p>
+        </div>
+        <div id="fields">
+            <form>
+                <label>Email</label>
+                <input type="email" />
+                <label>Password</label>
+                <input type="password" />
+                <button class="common-button" type="submit">Log in</button>
+            </form>
+        </div>
+    </body>
+</html>
