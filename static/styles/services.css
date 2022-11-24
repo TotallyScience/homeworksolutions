@@ -1,0 +1,104 @@
+#top-bar {
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+#top-bar .search {
+    display: flex;
+    align-items: center;
+    border: solid 1px var(--dark-color);
+    border-radius: 15px;
+    height: 50px;
+    gap: 20px;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
+}
+
+#top-bar img {
+    width: 25px;
+    height: 25px;
+    margin-right: 20px;
+    background-color: var(--accent-color);
+    padding: 2%;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+#top-bar .input {
+    display: flex;
+    justify-content: center;
+}
+
+#top-bar select {
+    cursor: pointer;
+    background-color: #ffffff;
+    width: 150px;
+    height: 50px;
+    border-radius: 15px;
+    border: solid 1px black;
+    outline: none;
+    font-size: 18px;
+    text-indent: 8px;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
+}
+
+#top-bar input {
+    cursor: pointer;
+    background-color: transparent;
+    width: 250px;
+    height: 100%;
+    font-size: 18px;
+    text-indent: 8px;
+    border: none;
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+    outline: none;
+}
+
+#subjects {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    flex-wrap: wrap;
+    gap: 100px;
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
+#subjects .subject {
+    width: 200px;
+    height: 200px;
+    border: solid 2px var(--dark-color);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+#subjects .subject p {
+    font-size: 30px;
+    margin: 0%;
+    margin-top: 5%;
+}
+
+#subjects .subject hr {
+    background-color: #00841d;
+    width: 80%;
+}
+
+#subjects .subject img {
+    width: 100px;
+    margin-top: 10%;
+}
+
+#subjects .subject:hover {
+    transform: scale(1.02);
+}

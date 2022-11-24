@@ -1,0 +1,66 @@
+#top-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#top-bar div {
+    outline: solid 2px rgb(99, 99, 99);
+    padding: 1%;
+    border-radius: 15px;
+    width: 900px;
+    height: 100px;
+}
+
+#top-bar div p {
+    margin: 0%;
+}
+
+#top-bar div .heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#top-bar div .class {
+    margin-left: 50px;
+    margin-top: 10px;
+    font-size: 1.3rem;
+}
+
+#top-bar div select {
+    margin-left: 50px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    font-size: 1.3rem;
+    padding: 7px 0;
+    background: transparent;
+}
+
+#top-bar div textarea {
+    margin-left: 50px;
+    margin-top: 10px;
+    background-color: transparent;
+    width: 90%;
+    height: 90%;
+    border-radius: 15px;
+    border: solid 1px black;
+    outline: none;
+    font-size: 1.2rem;
+    text-indent: 8px;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
+}
+
+#top-bar .instructions {
+    height: 500px;
+}
+
+#top-bar button {
+    margin-top: 50px;
+    padding: 1%;
+}

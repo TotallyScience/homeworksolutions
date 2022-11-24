@@ -1,0 +1,179 @@
+#top-bar {
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+#top-bar .search {
+    display: flex;
+    align-items: center;
+    border: solid 1px var(--dark-color);
+    border-radius: 15px;
+    height: 50px;
+    gap: 20px;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
+}
+
+#top-bar img {
+    width: 25px;
+    height: 25px;
+    margin-right: 20px;
+    background-color: var(--accent-color);
+    padding: 2%;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+#top-bar .input {
+    display: flex;
+    justify-content: center;
+}
+
+#top-bar select {
+    cursor: pointer;
+    background-color: #ffffff;
+    width: 150px;
+    height: 50px;
+    border-radius: 15px;
+    border: solid 1px black;
+    outline: none;
+    font-size: 18px;
+    text-indent: 8px;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
+}
+
+#top-bar input {
+    cursor: pointer;
+    background-color: transparent;
+    width: 250px;
+    height: 100%;
+    font-size: 18px;
+    text-indent: 8px;
+    border: none;
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+    outline: none;
+}
+
+#helpers {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    flex-wrap: wrap;
+    gap: 100px;
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
+#helpers .helper {
+    width: 300px;
+    border: solid 2px var(--dark-color);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.1s;
+    padding-bottom: 20px;
+}
+
+#helpers .helper .profile {
+    width: 100px;
+    height: 100px;
+}
+
+#helpers .helper .top {
+    display: flex;
+    gap: 50px;
+    margin-top: 10px;
+}
+
+#helpers .helper .top div {
+    display: flex;
+    flex-direction: column;
+}
+
+#helpers .helper .top div .name {
+    font-size: 25px;
+}
+
+#helpers .helper .top div .review img {
+    width: 70px;
+}
+
+#helpers .helper .top div .review {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+#helpers .helper .top div .review p {
+    font-size: 0.7rem;
+}
+
+#helpers p {
+    margin: 0px;
+}
+
+#helpers .helper .skills {
+    display: flex;
+    gap: 50px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#helpers .helper .skills {
+    display: flex;
+    gap: 50px;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+#helpers .helper .skills .title {
+    font-weight: bold;
+}
+
+#helpers .helper .skills .list {
+    text-align: end;
+}
+
+#helpers .helper hr {
+    width: 80%;
+    margin-top: 30px;
+}
+
+#helpers .helper .underbar {
+    display: flex;
+    font-size: 1.2rem;
+    width: 90%;
+    justify-content: space-between;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#helpers .helper .underbar .num {
+    font-size: 1.4rem;
+}
+
+#helpers .helper .options {
+    width: 90%;
+    justify-content: center;
+    gap: 20px;
+    display: flex;
+    margin-top: 30px;
+}
+
+#helpers .helper .options button {
+    width: 110px;
+    height: 40px;
+}
