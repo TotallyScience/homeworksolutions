@@ -29,6 +29,9 @@ app.get('/signup', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login');
 });
+app.get('/orders', (req, res) => {
+    res.render('orders');
+});
 
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
