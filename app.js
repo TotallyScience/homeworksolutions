@@ -9,6 +9,7 @@ const account = require('./models/account');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const app = express();
+const { checkLogin } = require('./middleware/isLoggedIn.js');
 
 //connect to mongodb
 const dbURI =
@@ -22,6 +23,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'static'), { redirect: false }));
 app.use(cookieParser());
+app.use(checkLogin);
 
 app.get('/', (req, res) => {
     res.render('index');
@@ -116,7 +118,7 @@ app.post('/login', bodyParser.urlencoded({ extended: true }), (req, res) => {
                 } else {
                     if (bcrypt.compareSync(password, user[0].password)) {
                         let token = jwt.sign(
-                            { id: account._id },
+                            { id: user[0]._id },
                             process.env.TOKEN_SECRET
                         );
                         return res.cookie('access_token', token).redirect('/');

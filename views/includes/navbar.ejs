@@ -30,11 +30,13 @@
     </div>
 
     <div id="rightbar">
+        <%if (!locals.isLoggedIn) { %>
         <p><a href="/login">Login</a></p>
 
         <p>
             <a href="/signup"><span>Sign Up</span></a>
         </p>
+        <% } else { %> <% } %>
     </div>
 </div>
 <div style="margin-bottom: 100px"></div>
