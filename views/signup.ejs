@@ -12,23 +12,34 @@
             <p class="h2">Create an account or <a href="/login">log in</a></p>
         </div>
         <div id="fields">
-            <form>
+            <form action="/signup" method="post">
                 <label>Email</label>
-                <input type="email" />
+                <input
+                    type="email"
+                    name="email"
+                    value="<%=locals.form?.email%>"
+                />
                 <label
                     >Username <span>(Choose something anonymous)</span></label
                 >
-                <input type="text" />
+                <input
+                    type="text"
+                    name="username"
+                    value="<%=locals.form?.username%>"
+                />
                 <label>Password</label>
-                <input type="password" />
+                <input type="password" name="password" />
                 <label>Confirm Password</label>
-                <input type="password" />
+                <input type="password" name="confirmPassword" />
                 <p>
                     By clicking the “Sign Up” button, you are creating a
                     Homework Solutions account, and you agree to Homework
                     Solution's
                     <a href="">Terms of Use</a> and
                     <a href="">Privacy Policy</a>.
+                </p>
+                <p>
+                    <span style="color: red"><%= locals.error %></span>
                 </p>
                 <button class="common-button" type="submit">Sign up</button>
             </form>

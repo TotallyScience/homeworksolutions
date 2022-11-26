@@ -12,11 +12,18 @@
             <p class="h2">Log in or <a href="/signup">create an account</a></p>
         </div>
         <div id="fields">
-            <form>
+            <form action="/login" method="post">
                 <label>Email</label>
-                <input type="email" />
+                <input
+                    type="email"
+                    name="email"
+                    value="<%=locals.form?.email%>"
+                />
                 <label>Password</label>
-                <input type="password" />
+                <input type="password" name="password" />
+                <p>
+                    <span style="color: red"><%= locals.error %></span>
+                </p>
                 <button class="common-button" type="submit">Log in</button>
             </form>
         </div>
