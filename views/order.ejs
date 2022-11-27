@@ -7,55 +7,64 @@
 
     <body>
         <%- include('includes/navbar.ejs') %>
-        <div id="top-bar">
-            <div>
-                <p class="heading">Class:</p>
-                <p class="class">Spanish</p>
+        <form method="post">
+            <div id="top-bar">
+                <p style="color: red"><%=locals.error%></p>
+                <div>
+                    <p class="heading">Class:</p>
+                    <p class="class"><%=locals.class?.toUpperCase()%></p>
+                </div>
+                <div>
+                    <p class="heading">Assignment Type:</p>
+                    <select name="type">
+                        <option value="subject">Essay</option>
+                        <option value="saab">Paragraph</option>
+                    </select>
+                </div>
+                <div>
+                    <p class="heading">Assignment Details:</p>
+                    <select name="details">
+                        <option value="subject">Writing</option>
+                        <option value="saab">Rewriting</option>
+                        <option value="fiat">Editing</option>
+                        <option value="audi">Proofreading</option>
+                        <option value="fiat">Problem Solving</option>
+                        <option value="audi">Calculations</option>
+                    </select>
+                </div>
+                <div>
+                    <p class="heading">Assignment Size:</p>
+                    <input type="number" placeholder="# of Pages" name="size" />
+                    <select name="spacing">
+                        <option value="double">Double Spaced</option>
+                        <option value="single">Single Spaced</option>
+                    </select>
+                </div>
+                <div>
+                    <p class="heading">Deadline:</p>
+                    <input
+                        type="date"
+                        id="start"
+                        name="deadline"
+                        max="2025-12-31"
+                    />
+                </div>
+                <div class="instructions">
+                    <p class="heading">Instructions:</p>
+                    <textarea
+                        id="w3review"
+                        name="instructions"
+                        rows="20"
+                        cols="50"
+                        placeholder="List all the requirements for the assignment:
+(feel free to attach google drive links with files)"
+                    ></textarea>
+                </div>
+
+                <button class="common-button" type="submit">
+                    Submit your order
+                </button>
             </div>
-            <div>
-                <p class="heading">Assignment Type:</p>
-                <select id="cars" name="cars">
-                    <option value="subject">Subject</option>
-                    <option value="saab">Math</option>
-                    <option value="fiat">Science</option>
-                    <option value="audi">Language</option>
-                </select>
-            </div>
-            <div>
-                <p class="heading">Assignment Details:</p>
-                <select id="cars" name="cars">
-                    <option value="subject">Subject</option>
-                    <option value="saab">Math</option>
-                    <option value="fiat">Science</option>
-                    <option value="audi">Language</option>
-                </select>
-            </div>
-            <div>
-                <p class="heading">Assignment Size:</p>
-                <select id="cars" name="cars">
-                    <option value="subject">Subject</option>
-                    <option value="saab">Math</option>
-                    <option value="fiat">Science</option>
-                    <option value="audi">Language</option>
-                </select>
-            </div>
-            <div>
-                <p class="heading">Deadline:</p>
-                <select id="cars" name="cars">
-                    <option value="subject">Subject</option>
-                    <option value="saab">Math</option>
-                    <option value="fiat">Science</option>
-                    <option value="audi">Language</option>
-                </select>
-            </div>
-            <div class="instructions">
-                <p class="heading">Instructions:</p>
-                <textarea id="w3review" name="w3review" rows="20" cols="50">
-List all the requirements for the assignment:
-(feel free to attach google drive links with files)</textarea
-                >
-            </div>
-            <button class="common-button">Submit your order</button>
-        </div>
+        </form>
     </body>
 </html>

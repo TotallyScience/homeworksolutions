@@ -1,15 +1,19 @@
 require('dotenv').config();
-const express = require('express');
 
+const express = require('express');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
-const account = require('./models/account');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const app = express();
+
+const mongoose = require('mongoose');
+const account = require('./models/account');
+const order = require('./models/order');
+
 const { checkLogin } = require('./middleware/isLoggedIn.js');
+
+const app = express();
 
 //connect to mongodb
 const dbURI =
@@ -34,7 +38,37 @@ app.get('/services', (req, res) => {
 });
 
 app.get('/order', (req, res) => {
-    res.render('order');
+    res.render('order', { class: req.query.class });
+});
+
+app.post('/order', bodyParser.urlencoded({ extended: true }), (req, res) => {
+    const { type, details, size, spacing, deadline } = req.body;
+    let error = '';
+
+    if (
+        type.length < 1 ||
+        details.length < 1 ||
+        size.length < 1 ||
+        deadline.length < 1 ||
+        spacing.length < 1
+    ) {
+        error = '*You must fill out all details';
+    }
+
+    if (error != '') {
+        const form = {
+            type: type,
+            details: details,
+            size: size,
+            deadline: deadline,
+        };
+
+        res.render('order', {
+            class: req.query.class,
+            error: error,
+            form: form,
+        });
+    }
 });
 
 app.get('/helpers', (req, res) => {

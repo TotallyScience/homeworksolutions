@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    margin-bottom: 100px;
 }
 
 #top-bar div {
@@ -40,6 +41,18 @@
     background: transparent;
 }
 
+#top-bar div input {
+    margin-left: 50px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    font-size: 1.3rem;
+    padding: 7px 0;
+    background: transparent;
+}
+
 #top-bar div textarea {
     margin-left: 50px;
     margin-top: 10px;
@@ -50,7 +63,7 @@
     border: solid 1px black;
     outline: none;
     font-size: 1.2rem;
-    text-indent: 8px;
+    padding-left: 15px;
     -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
     -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
     box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
