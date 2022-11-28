@@ -2,7 +2,7 @@
 <html>
     <head>
         <%- include('includes/head.ejs') %>
-        <link rel="stylesheet" href="styles/order.css" />
+        <link rel="stylesheet" href="/styles/order.css" />
     </head>
 
     <body>
@@ -17,27 +17,27 @@
                 <div>
                     <p class="heading">Assignment Type:</p>
                     <select name="type">
-                        <option value="subject">Essay</option>
-                        <option value="saab">Paragraph</option>
+                        <option value="Essay">Essay</option>
+                        <option value="Paragraph">Paragraph</option>
                     </select>
                 </div>
                 <div>
                     <p class="heading">Assignment Details:</p>
                     <select name="details">
-                        <option value="subject">Writing</option>
-                        <option value="saab">Rewriting</option>
-                        <option value="fiat">Editing</option>
-                        <option value="audi">Proofreading</option>
-                        <option value="fiat">Problem Solving</option>
-                        <option value="audi">Calculations</option>
+                        <option value="Writing">Writing</option>
+                        <option value="Rewriting">Rewriting</option>
+                        <option value="Editing">Editing</option>
+                        <option value="Proofreading">Proofreading</option>
+                        <option value="Problem Solving">Problem Solving</option>
+                        <option value="Calculations">Calculations</option>
                     </select>
                 </div>
                 <div>
                     <p class="heading">Assignment Size:</p>
                     <input type="number" placeholder="# of Pages" name="size" />
                     <select name="spacing">
-                        <option value="double">Double Spaced</option>
-                        <option value="single">Single Spaced</option>
+                        <option value="Double">Double Spaced</option>
+                        <option value="Single">Single Spaced</option>
                     </select>
                 </div>
                 <div>
@@ -57,7 +57,7 @@
                         rows="20"
                         cols="50"
                         placeholder="List all the requirements for the assignment:
-(feel free to attach google drive links with files)"
+(feel free to attach google drive links with files/screenshots)"
                     ></textarea>
                 </div>
 

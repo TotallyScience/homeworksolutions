@@ -22,7 +22,8 @@ p,
 p2,
 a,
 button,
-label {
+label,
+div {
     color: var(--dark-color);
     font-family: 'Rubik', sans-serif;
 }
@@ -48,6 +49,12 @@ p {
     font-size: 17px;
     cursor: pointer;
     padding: 3%;
+}
+
+.common-button.alt {
+    background-color: var(--light-color);
+    border: 2px solid var(--accent-color);
+    color: var(--dark-color);
 }
 
 .common-button:hover {

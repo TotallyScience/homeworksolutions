@@ -14,27 +14,35 @@
     </div>
 
     <div id="middlebar">
-        <div class="nav-button #{index}"><a href="/services">Services</a></div>
-        <div class="nav-button #{classes}"><a href="/helpers">Helpers</a></div>
-        <div class="nav-button #{leaderboard}">
+        <div class="nav-button <%=locals.services%>">
+            <a href="/services">Services</a>
+        </div>
+        <div class="nav-button <%=locals.helpers%>">
+            <a href="/helpers">Helpers</a>
+        </div>
+        <div class="nav-button <%=locals.howorder%>">
             <a href="/leaderboard">How To Order</a>
         </div>
-        <div class="nav-button #{apps}">
+        <div class="nav-button <%=locals.reviews%>">
             <a href="/applications">Reviews</a>
         </div>
-        <div class="nav-button #{chat}"><a href="/chat">About Us</a></div>
-        <div class="nav-button #{chat}">
+        <div class="nav-button <%=locals.aboutus%>">
+            <a href="/chat">About Us</a>
+        </div>
+        <div class="nav-button <%=locals.becomehelper%>">
             <a href="/chat">Become a Helper</a>
         </div>
-        <div class="nav-button #{chat}"><a href="/orders">Orders</a></div>
+        <div class="nav-button <%=locals.ordersNav%>">
+            <a href="/orders">Orders</a>
+        </div>
     </div>
 
     <div id="rightbar">
         <%if (!locals.isLoggedIn) { %>
-        <p><a href="/login">Login</a></p>
+        <p><a href="/account/login">Login</a></p>
 
         <p>
-            <a href="/signup"><span>Sign Up</span></a>
+            <a href="/account/signup"><span>Sign Up</span></a>
         </p>
         <% } else { %> <% } %>
     </div>

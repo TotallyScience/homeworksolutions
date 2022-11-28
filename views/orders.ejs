@@ -2,7 +2,7 @@
 <html>
     <head>
         <%- include('includes/head.ejs') %>
-        <link rel="stylesheet" href="styles/orders.css" />
+        <link rel="stylesheet" href="/styles/orders.css" />
     </head>
 
     <body>
@@ -11,46 +11,107 @@
             <p class="h1">Current Orders</p>
         </div>
         <div id="current">
-            <div>
-                <p class="class">Geometry</p>
+            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
+            <div class="con">
+                <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
-                    Description of the assignment created by the person who
-                    posted the request.
+                    <%=order.type%><br />
+                    &emsp;-<%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    &emsp;-<%=order.spacing%> spaced <br />
                 </p>
-                <p class="date">Due date: 11/19/22</p>
-                <button class="common-button">See Offers</button>
+                <p class="date">Due date: <%=order.deadline%></p>
+                <div class="buttonCon">
+                    <button class="common-button">See Offers</button>
+                    <p><%=order.offers.length%></p>
+                </div>
             </div>
-            <div>
-                <p class="class">Geometry</p>
-                <p class="desc">
-                    Description of the assignment created by the person who
-                    posted the request.
-                </p>
-                <p class="date">Due date: 11/19/22</p>
-                <button class="common-button">See Offers</button>
-            </div>
-            <div>
-                <p class="class">Geometry</p>
-                <p class="desc">
-                    Description of the assignment created by the person who
-                    posted the request.
-                </p>
-                <p class="date">Due date: 11/19/22</p>
-                <button class="common-button">See Offers</button>
-            </div>
-            <div>
-                <p class="class">Geometry</p>
-                <p class="desc">
-                    Description of the assignment created by the person who
-                    posted the request.
-                </p>
-                <p class="date">Due date: 11/19/22</p>
-                <button class="common-button">See Offers</button>
-            </div>
+            <% }); %> <% }; %>
         </div>
         <div id="heading">
             <p class="h1">Past Orders</p>
+        </div>
+        <div id="heading">
+            <% if(pastOrders.length <= 0) {%>
             <p class="h2">You have no past orders.</p>
+            <% } %>
+        </div>
+        <div id="current">
+            <% if(pastOrders.length > 0) { %> <% pastOrders.forEach(order => {
+            %>
+            <div>
+                <p class="class"><%=order.class.toUpperCase()%></p>
+                <p class="desc">
+                    <%=order.type%><br />
+                    <%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    <%=order.spacing%> spaced
+                </p>
+                <p class="date">Due date: <%=order.deadline%></p>
+                <div>
+                    <button class="common-button">See Offers</button>
+                    <p>0</p>
+                </div>
+            </div>
+            <% }); }%>
+        </div>
+    </body>
+    <body>
+        <%- include('includes/navbar.ejs') %>
+        <div id="heading">
+            <p class="h1">
+                Accepted Orders <span class="past">(See past orders)</span>
+            </p>
+        </div>
+        <div id="current">
+            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
+            <div class="con">
+                <p class="class"><%=order.class.toUpperCase()%></p>
+                <p class="desc">
+                    <%=order.type%><br />
+                    &emsp;-<%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    &emsp;-<%=order.spacing%> spaced <br />
+                </p>
+                <p class="date">Due date: <%=order.deadline%></p>
+                <div class="buttonCon">
+                    <button class="common-button">See Offers</button>
+                    <p><%=order.offers.length%></p>
+                </div>
+            </div>
+            <% }); %> <% }; %>
+        </div>
+        <div id="heading">
+            <p class="h1">Requested Orders</p>
+            <button onclick="window.open('/orders', '_self')">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/61/61225.png"
+                />
+            </button>
+        </div>
+        <div id="current">
+            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
+            <div class="con">
+                <p class="class"><%=order.class.toUpperCase()%></p>
+                <p class="desc">
+                    <%=order.type%><br />
+                    &emsp;-<%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    &emsp;-<%=order.spacing%> spaced <br />
+                </p>
+                <br />
+                <p class="class">Requirements</p>
+                <div class="realdesc">
+                    I don't know man maybe just get a life and stuff. I mean
+                    it's really easy. I heard Wallmart's selling them.
+                </div>
+                <p class="date">Due date: <%=order.deadline%></p>
+                <div class="buttonCon">
+                    <button class="common-button">Offer</button>
+                    <button class="common-button alt">Details</button>
+                </div>
+            </div>
+            <% }); %> <% }; %>
         </div>
     </body>
 </html>

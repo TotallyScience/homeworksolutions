@@ -2,17 +2,19 @@
 <html>
     <head>
         <%- include('includes/head.ejs') %>
-        <link rel="stylesheet" href="styles/signup.css" />
+        <link rel="stylesheet" href="/styles/signup.css" />
     </head>
 
     <body>
         <%- include('includes/navbar.ejs') %>
         <div id="heading">
             <p class="h1">Welcome to Homework Solutions</p>
-            <p class="h2">Create an account or <a href="/login">log in</a></p>
+            <p class="h2">
+                Create an account or <a href="/account/login">log in</a>
+            </p>
         </div>
         <div id="fields">
-            <form action="/signup" method="post">
+            <form method="post">
                 <label>Email</label>
                 <input
                     type="email"

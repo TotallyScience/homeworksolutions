@@ -2,15 +2,37 @@ body {
     margin-left: 150px;
 }
 
+#heading {
+    display: flex;
+}
+
 #heading .h1 {
     font-size: 2rem;
     font-weight: bold;
+}
+
+#heading .past {
+    font-size: 1rem;
+    color: var(--accent-color);
+    font-weight: normal;
+    cursor: pointer;
 }
 
 #heading .h2 {
     margin-top: 10px;
     font-size: 1.6rem;
     margin-left: 100px;
+}
+
+#heading button {
+    margin-top: 4px;
+    margin-left: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+#heading button img {
+    width: 25px;
 }
 
 #current {
@@ -22,7 +44,7 @@ body {
     gap: 50px;
 }
 
-#current div {
+#current .con {
     width: 200px;
     padding: 1%;
     border-radius: 15px;
@@ -34,6 +56,34 @@ body {
     box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
 }
 
+#current .con .buttonCon {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#current .con .buttonCon button {
+    width: 150px;
+    padding: 2%;
+}
+
+#current .con .buttonCon p {
+    background-color: var(--accent-color);
+    border: 1.5px solid rgb(0, 0, 0);
+    padding: 2%;
+    width: 15px;
+    border-radius: 15px;
+    position: absolute;
+    top: 0;
+    margin-left: 150px;
+    color: var(--light-color);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
 #current .class {
     font-size: 1.4rem;
     font-weight: bold;
@@ -42,6 +92,20 @@ body {
 #current .desc {
     margin-top: 15px;
     font-size: 1.2rem;
+}
+
+#current .realdesc {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#current .realdesc p {
+    text-overflow: ellipsis;
 }
 
 #current .date {
