@@ -55,6 +55,10 @@ const orderSchema = new Schema(
                 },
             },
         ],
+        helperid: {
+            type: String,
+            required: false,
+        },
     },
     { timestamps: true }
 );

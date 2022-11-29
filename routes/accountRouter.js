@@ -40,6 +40,7 @@ router.post(
                     email: email,
                     username: username,
                     password: pass,
+                    helper: false,
                 });
                 account
                     .save()

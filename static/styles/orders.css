@@ -24,6 +24,12 @@ body {
     margin-left: 100px;
 }
 
+#heading .h2 a {
+    font-size: 1rem;
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
 #heading button {
     margin-top: 4px;
     margin-left: 20px;

@@ -15,6 +15,10 @@ const accountSchema = new Schema(
             type: String,
             required: true,
         },
+        helper: {
+            type: Boolean,
+            required: true,
+        },
     },
     { timestamps: true }
 );

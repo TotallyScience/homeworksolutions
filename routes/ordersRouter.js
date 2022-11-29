@@ -9,16 +9,36 @@ const { decodeToken } = require('../middleware/isLoggedIn.js');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    let id = decodeToken(req.cookies.access_token).id;
-    Order.find({ userid: id, open: true }).then((orders) => {
-        Order.find({ userid: id, open: false }).then((pastOrders) => {
-            res.render('orders', {
-                orders: orders,
-                pastOrders: pastOrders,
-                ordersNav: 'selected',
+    if (res.locals.isLoggedIn) {
+        const id = decodeToken(req.cookies.access_token).id;
+        if (!res.locals.isHelper) {
+            //Regular user
+            Order.find({ userid: id, open: true }).then((orders) => {
+                Order.find({ userid: id, open: false }).then((pastOrders) => {
+                    res.render('orders', {
+                        orders: orders,
+                        pastOrders: pastOrders,
+                        ordersNav: 'selected',
+                    });
+                });
             });
-        });
-    });
+        } else {
+            //Helper
+            Order.find({ open: true }).then((orders) => {
+                Order.find({ open: false, helperid: id }).then(
+                    (acceptedOrders) => {
+                        res.render('orders', {
+                            orders: orders,
+                            acceptedOrders: acceptedOrders,
+                            ordersNav: 'selected',
+                        });
+                    }
+                );
+            });
+        }
+    } else {
+        res.redirect('/account/signup');
+    }
 });
 
 module.exports = router;

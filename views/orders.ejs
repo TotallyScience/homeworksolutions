@@ -5,10 +5,19 @@
         <link rel="stylesheet" href="/styles/orders.css" />
     </head>
 
+    <% if(!locals.isHelper) { %>
     <body>
         <%- include('includes/navbar.ejs') %>
         <div id="heading">
             <p class="h1">Current Orders</p>
+        </div>
+        <div id="heading">
+            <% if(orders.length <= 0) {%>
+            <p class="h2">
+                You have no orders.
+                <a href="/services">Get your homework done</a>
+            </p>
+            <% } %>
         </div>
         <div id="current">
             <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
@@ -56,15 +65,22 @@
             <% }); }%>
         </div>
     </body>
+    <% } else {%>
     <body>
         <%- include('includes/navbar.ejs') %>
         <div id="heading">
             <p class="h1">
-                Accepted Orders <span class="past">(See past orders)</span>
+                Active Orders <span class="past">(See past orders)</span>
             </p>
         </div>
+        <div id="heading">
+            <% if(acceptedOrders.length <= 0) {%>
+            <p class="h2">You have no active orders.</p>
+            <% } %>
+        </div>
         <div id="current">
-            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
+            <% if(acceptedOrders.length > 0) { %> <%
+            acceptedOrders.forEach(order => { %>
             <div class="con">
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
@@ -101,10 +117,7 @@
                 </p>
                 <br />
                 <p class="class">Requirements</p>
-                <div class="realdesc">
-                    I don't know man maybe just get a life and stuff. I mean
-                    it's really easy. I heard Wallmart's selling them.
-                </div>
+                <div class="realdesc"><%=order.instructions%></div>
                 <p class="date">Due date: <%=order.deadline%></p>
                 <div class="buttonCon">
                     <button class="common-button">Offer</button>
@@ -114,4 +127,5 @@
             <% }); %> <% }; %>
         </div>
     </body>
+    <% }%>
 </html>

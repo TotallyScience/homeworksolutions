@@ -10,11 +10,16 @@ const decodeToken = (token) => {
 const isLoggedIn = async (token, res) => {
     if (!token) return false;
     if (jwt.verify(token, SECRET) == false) return false;
-    if (!(await Account.exists({ _id: decodeToken(token).id }))) {
+    const id = decodeToken(token).id;
+    if (!(await Account.exists({ _id: id }))) {
         if (res != null) {
             res.clearCookie('access_token');
         }
         return false;
+    } else {
+        await Account.find({ _id: id }).then((user) => {
+            res.locals.isHelper = user[0].helper;
+        });
     }
     return true;
 };
@@ -24,7 +29,6 @@ const checkLogin = async (req, res, next) => {
     let token = req.cookies.access_token;
 
     res.locals.isLoggedIn = await isLoggedIn(token, res);
-
     next();
 };
 
