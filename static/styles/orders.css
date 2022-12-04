@@ -101,17 +101,14 @@ body {
 }
 
 #current .realdesc {
-    margin-top: 15px;
+    margin-top: -15px;
     font-size: 1.2rem;
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-#current .realdesc p {
-    text-overflow: ellipsis;
+    height: 115px;
 }
 
 #current .date {
@@ -126,7 +123,7 @@ body {
 
 #popup {
     width: 40vw;
-    height: 600px;
+    height: 700px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -158,6 +155,7 @@ body {
 #popup .requirements {
     margin-top: 30px;
     font-size: 1.2rem;
+    height: 400px;
 }
 
 #popup .requirements .header {
@@ -169,6 +167,42 @@ body {
 #popup .requirements .norm {
     font-size: 1.2rem;
     margin-left: 10px;
-    overflow-y: scroll;
-    max-height: 200px;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+#popup .buttonCon {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+#popup .common-button {
+    padding: 1%;
+    width: 150px;
+}
+
+#popup input {
+    cursor: pointer;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    font-size: 1rem;
+    width: 150px;
+    background: transparent;
+    position: relative;
+}
+
+#popup .numDiv {
+    position: relative;
+}
+
+#popup .numDiv:before {
+    content: '$';
+    position: absolute;
+    left: -10px;
+    z-index: 1;
+    opacity: 0.7;
 }

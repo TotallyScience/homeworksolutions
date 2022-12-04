@@ -107,7 +107,8 @@
         </div>
         <div id="current">
             <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
-            <div class="con">
+            <div class="con" id="<%=order.id%>">
+                <p class="username" style="display: none"><%=order.user%></p>
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
@@ -117,32 +118,70 @@
                 </p>
                 <br />
                 <p class="class">Requirements</p>
-                <div class="realdesc"><%=order.instructions%></div>
+                <div class="realdesc" style="white-space: pre-line">
+                    <%=order.instructions%>
+                </div>
                 <p class="date">Due date: <%=order.deadline%></p>
+
                 <div class="buttonCon">
                     <button class="common-button">Offer</button>
-                    <button class="common-button alt">Details</button>
+                    <button
+                        class="common-button alt"
+                        onclick="showModel('<%=order.id%>')"
+                    >
+                        Details
+                    </button>
                 </div>
             </div>
             <% }); %> <% }; %>
         </div>
-        <div id="popup">
+        <div id="popup" style="display: none">
             <p class="title">ALGEBRA</p>
-            <p class="user">Requested By Jaxplays</p>
+            <p class="user">Requested by <span id="popUser"></span></p>
             <hr />
-            <div class="details">
-                <p>Essay</p>
-                <p>&emsp;-Writing</p>
-                <p>2324</p>
-                <p>&emsp;-Double spaced</p>
-            </div>
+            <div class="details" id="popDetails"></div>
             <div class="requirements">
                 <p class="header">Requirements</p>
-                <p class="norm" style="white-space: pre">
-                    1) help 2) Get a life 3) go to my google drive
-                </p>
+                <p class="norm" style="white-space: pre-line" id="popReqs"></p>
             </div>
+            <form action="/orders/offer" method="POST">
+                <div class="buttonCon">
+                    <button class="common-button alt" onclick="hideModel()">
+                        Cancel
+                    </button>
+
+                    <input style="display: none" name="orderId" id="orderId" />
+                    <div class="numDiv">
+                        <input
+                            type="number"
+                            id="offerAmount"
+                            placeholder="0.00"
+                            name="amount"
+                        />
+                    </div>
+                    <button type="submit" class="common-button">Offer</button>
+                </div>
+            </form>
         </div>
     </body>
     <% }%>
+    <script>
+        function showModel(id) {
+            document.getElementById('popup').style.display = '';
+            document.getElementById('orderId').value = id;
+            document.getElementById('popUser').innerHTML = document
+                .getElementById(id)
+                .querySelector('.username').innerHTML;
+            document.getElementById('popReqs').innerHTML = document
+                .getElementById(id)
+                .querySelector('.realdesc').innerHTML;
+            document.getElementById('popDetails').innerHTML = document
+                .getElementById(id)
+                .querySelector('.desc').innerHTML;
+            document.getElementById('offerAmount').value = '';
+        }
+        function hideModel() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
 </html>

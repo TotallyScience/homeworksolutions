@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const orderSchema = new Schema(
     {
         userid: {
-            type: String,
-            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Account',
         },
         class: {
             type: String,
