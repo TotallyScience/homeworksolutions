@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const Order = require('../models/order');
 const Account = require('../models/account');
+const Offer = require('../models/offer');
 
 const { decodeToken } = require('../middleware/isLoggedIn.js');
 
@@ -29,16 +30,11 @@ router.get('/', async (req, res) => {
             Order.find({ open: true }).then((orders) => {
                 Order.find({ open: false, helperid: id }).then(
                     async (acceptedOrders) => {
-                        console.log('hi');
                         var acceptedOrderDetails = [];
-                        console.log('hei');
-                        console.log(acceptedOrders.length);
                         for (let i = 0; i < orders.length; i++) {
-                            console.log('hfi');
                             let user = await Account.find({
                                 _id: orders[i].userid,
                             });
-                            console.log(user);
                             acceptedOrderDetails.push({
                                 id: orders[i]._id,
                                 user: user[0].username,
@@ -51,7 +47,6 @@ router.get('/', async (req, res) => {
                                 instructions: orders[i].instructions,
                                 open: orders[i].open,
                             });
-                            console.log(orders.class);
                         }
 
                         res.render('orders', {
@@ -79,19 +74,32 @@ router.post(
         //update the order with a new array in the offers
         const userId = decodeToken(req.cookies.access_token).id;
         const { amount, orderId } = req.body;
-        await Order.updateOne(
-            { _id: orderId },
-            {
-                $push: {
-                    offers: {
-                        orderId: orderId,
-                        offererId: userId,
-                        amount: amount,
-                    },
-                },
-            }
-        );
-        res.redirect('/account/orders');
+
+        if (amount == '') {
+            res.redirect(`/orders?retrack=true&amount=blank&id=${orderId}`);
+        } else {
+            let offer = new Offer({
+                orderid: orderId,
+                offererid: userId,
+                amount: amount,
+            });
+            await offer.save().catch((err) => {
+                console.log(err);
+            });
+
+            let order = await Order.findOne({ _id: orderId }).catch((err) => {
+                console.log(err);
+            });
+            order.offers.push(offer._id);
+            await order.save().catch((err) => {
+                console.log(err);
+            });
+            await order.populate('offers').catch((err) => {
+                console.log(err);
+            });
+
+            res.redirect('/orders');
+        }
     }
 );
 

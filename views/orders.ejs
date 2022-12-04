@@ -146,7 +146,11 @@
             </div>
             <form action="/orders/offer" method="POST">
                 <div class="buttonCon">
-                    <button class="common-button alt" onclick="hideModel()">
+                    <button
+                        type="button"
+                        class="common-button alt"
+                        onclick="hideModel()"
+                    >
                         Cancel
                     </button>
 
@@ -182,6 +186,13 @@
         }
         function hideModel() {
             document.getElementById('popup').style.display = 'none';
+        }
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.get('retrack') == 'true') {
+            showModel(urlParams.get('id'));
+            alert('You must offer a valid amount');
         }
     </script>
 </html>

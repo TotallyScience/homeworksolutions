@@ -41,20 +41,11 @@ const orderSchema = new Schema(
         },
         offers: [
             {
-                helperid: {
-                    type: String,
-                    required: true,
-                },
-                description: {
-                    type: String,
-                    required: true,
-                },
-                price: {
-                    type: Number,
-                    required: true,
-                },
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Offer',
             },
         ],
+
         helperid: {
             type: String,
             required: false,
