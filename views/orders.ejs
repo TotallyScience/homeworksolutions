@@ -98,7 +98,9 @@
             <% }); %> <% }; %>
         </div>
         <div id="heading">
-            <p class="h1">Requested Orders</p>
+            <p class="h1">
+                Requested Orders <span class="past">(See your offers)</span>
+            </p>
             <button onclick="window.open('/orders', '_self')">
                 <img
                     src="https://cdn-icons-png.flaticon.com/512/61/61225.png"
@@ -124,7 +126,6 @@
                 <p class="date">Due date: <%=order.deadline%></p>
 
                 <div class="buttonCon">
-                    <button class="common-button">Offer</button>
                     <button
                         class="common-button alt"
                         onclick="showModel('<%=order.id%>')"

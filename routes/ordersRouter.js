@@ -26,36 +26,52 @@ router.get('/', async (req, res) => {
             });
         } else {
             //Helper
-
-            Order.find({ open: true }).then((orders) => {
-                Order.find({ open: false, helperid: id }).then(
-                    async (acceptedOrders) => {
-                        var acceptedOrderDetails = [];
-                        for (let i = 0; i < orders.length; i++) {
-                            let user = await Account.find({
-                                _id: orders[i].userid,
-                            });
-                            acceptedOrderDetails.push({
-                                id: orders[i]._id,
-                                user: user[0].username,
-                                class: orders[i].class,
-                                type: orders[i].type,
-                                details: orders[i].details,
-                                size: orders[i].size,
-                                spacing: orders[i].spacing,
-                                deadline: orders[i].deadline,
-                                instructions: orders[i].instructions,
-                                open: orders[i].open,
-                            });
+            var acceptedOrderDetails = [];
+            await Order.find({ open: true }).then(async (orders) => {
+                for (let i = 0; i < orders.length; i++) {
+                    //for each offer id in the document:
+                    let offered = false;
+                    for (let j = 0; j < orders[i].offers.length; j++) {
+                        //get the document of the offer
+                        //console.log(orders[i].offers[j]);
+                        let offererID = await Offer.findOne({
+                            _id: orders[i].offers[j],
+                        });
+                        //check if offerer id matches user id
+                        if (offererID != null) {
+                            if (offererID.offererid == id) {
+                                //if it matches it, do the following
+                                offered = true;
+                            }
                         }
-
-                        res.render('orders', {
-                            orders: acceptedOrderDetails,
-                            acceptedOrders: acceptedOrders,
-                            ordersNav: 'selected',
+                    }
+                    if (!offered) {
+                        let user = await Account.find({
+                            _id: orders[i].userid,
+                        });
+                        acceptedOrderDetails.push({
+                            id: orders[i]._id,
+                            user: user[0].username,
+                            class: orders[i].class,
+                            type: orders[i].type,
+                            details: orders[i].details,
+                            size: orders[i].size,
+                            spacing: orders[i].spacing,
+                            deadline: orders[i].deadline,
+                            instructions: orders[i].instructions,
+                            open: orders[i].open,
                         });
                     }
-                );
+                }
+            });
+            let acceptedOrders = await Order.find({
+                open: false,
+                helperid: id,
+            });
+            res.render('orders', {
+                orders: acceptedOrderDetails,
+                acceptedOrders: acceptedOrders,
+                ordersNav: 'selected',
             });
         }
     } else {
