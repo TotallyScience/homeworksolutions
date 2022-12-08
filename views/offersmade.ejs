@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('includes/head.ejs') %>
+        <link rel="stylesheet" href="/styles/orders.css" />
+    </head>
+    <body>
+        <%- include('includes/navbar.ejs') %>
+        <div id="heading">
+            <p class="h1">
+                Your Offers
+                <span class="past" onclick="window.open('/orders','_self')"
+                    >(Go to orders)</span
+                >
+            </p>
+            <button onclick="window.open('/orders', '_self')">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/61/61225.png"
+                />
+            </button>
+        </div>
+        <div id="current">
+            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
+            <div class="con" id="<%=order.id%>">
+                <p class="username" style="display: none"><%=order.user%></p>
+                <p class="offerid" style="display: none"><%=order.offerid%></p>
+                <p class="class"><%=order.user.toUpperCase()%></p>
+                <p class="class"><%=order.class.toUpperCase()%></p>
+
+                <p class="desc">
+                    <%=order.type%><br />
+                    &emsp;-<%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    &emsp;-<%=order.spacing%> spaced <br />
+                </p>
+                <br />
+                <p class="class" id="amount">$<%=order.amount%></p>
+                <div class="realdesc" style="display: none">
+                    <%=order.instructions%>
+                </div>
+                <p class="date">Due date: <%=order.deadline%></p>
+
+                <div class="buttonCon">
+                    <button
+                        class="common-button alt"
+                        onclick="showModel('<%=order.id%>')"
+                    >
+                        Details
+                    </button>
+                </div>
+            </div>
+            <% }); %> <% }; %>
+        </div>
+        <div id="popup" style="display: none">
+            <p class="title">ALGEBRA</p>
+            <p class="user">
+                Offer made to <span id="popUser"> </span> for
+                <span id="popAmount" style="font-weight: bold"> </span>
+            </p>
+            <hr />
+            <div class="details" id="popDetails"></div>
+            <div class="requirements">
+                <p class="header">Requirements</p>
+                <p class="norm" style="white-space: pre-line" id="popReqs"></p>
+            </div>
+            <form action="/orders/removeoffer" method="POST">
+                <div class="buttonCon">
+                    <button
+                        type="button"
+                        class="common-button alt"
+                        onclick="hideModel()"
+                    >
+                        Cancel
+                    </button>
+
+                    <input style="display: none" name="orderId" id="orderId" />
+                    <input style="display: none" name="offerId" id="offerid" />
+                    <button type="submit" class="common-button">
+                        Remove Offer
+                    </button>
+                </div>
+            </form>
+        </div>
+        <script>
+            function showModel(id) {
+                document.getElementById('popup').style.display = '';
+                document.getElementById('orderId').value = id;
+                document.getElementById('offerid').value = document
+                    .getElementById(id)
+                    .querySelector('.offerid').innerHTML;
+                document.getElementById('popUser').innerHTML = document
+                    .getElementById(id)
+                    .querySelector('.username').innerHTML;
+                document.getElementById('popAmount').innerHTML = document
+                    .getElementById(id)
+                    .querySelector('#amount').innerHTML;
+                document.getElementById('popReqs').innerHTML = document
+                    .getElementById(id)
+                    .querySelector('.realdesc').innerHTML;
+                document.getElementById('popDetails').innerHTML = document
+                    .getElementById(id)
+                    .querySelector('.desc').innerHTML;
+                document.getElementById('offerAmount').value = '';
+            }
+            function hideModel() {
+                document.getElementById('popup').style.display = 'none';
+            }
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            if (urlParams.get('retrack') == 'true') {
+                showModel(urlParams.get('id'));
+                alert('You must offer a valid amount');
+            }
+        </script>
+    </body>
+</html>

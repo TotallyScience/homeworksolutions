@@ -27,22 +27,20 @@ router.get('/', async (req, res) => {
         } else {
             //Helper
             var acceptedOrderDetails = [];
+
             await Order.find({ open: true }).then(async (orders) => {
                 for (let i = 0; i < orders.length; i++) {
                     //for each offer id in the document:
                     let offered = false;
-                    for (let j = 0; j < orders[i].offers.length; j++) {
-                        //get the document of the offer
-                        //console.log(orders[i].offers[j]);
-                        let offererID = await Offer.findOne({
-                            _id: orders[i].offers[j],
+                    let order = await orders[i]
+                        .populate('offers')
+                        .catch((err) => {
+                            console.log(err);
                         });
+                    for (let j = 0; j < orders[i].offers.length; j++) {
                         //check if offerer id matches user id
-                        if (offererID != null) {
-                            if (offererID.offererid == id) {
-                                //if it matches it, do the following
-                                offered = true;
-                            }
+                        if (order.offers[j].offererid == id) {
+                            offered = true;
                         }
                     }
                     if (!offered) {
@@ -110,12 +108,84 @@ router.post(
             await order.save().catch((err) => {
                 console.log(err);
             });
-            await order.populate('offers').catch((err) => {
-                console.log(err);
-            });
 
             res.redirect('/orders');
         }
+    }
+);
+
+router.get('/offers', async (req, res) => {
+    if (res.locals.isLoggedIn && res.locals.isHelper) {
+        const id = decodeToken(req.cookies.access_token).id;
+
+        let offerOrders = [];
+        await Order.find({ open: true }).then(async (orders) => {
+            for (let i = 0; i < orders.length; i++) {
+                //for each offer id in the document:
+                let offered = false;
+                let offerid;
+                let amount = 0;
+                let order = await orders[i].populate('offers').catch((err) => {
+                    console.log(err);
+                });
+                for (let j = 0; j < orders[i].offers.length; j++) {
+                    //check if offerer id matches user id
+                    if (order.offers[j].offererid == id) {
+                        offered = true;
+                        amount = order.offers[j].amount;
+                        offerid = order.offers[j]._id;
+                        break;
+                    }
+                }
+                if (offered) {
+                    let user = await Account.find({
+                        _id: orders[i].userid,
+                    });
+                    offerOrders.push({
+                        id: orders[i]._id,
+                        user: user[0].username,
+                        class: orders[i].class,
+                        type: orders[i].type,
+                        details: orders[i].details,
+                        size: orders[i].size,
+                        spacing: orders[i].spacing,
+                        deadline: orders[i].deadline,
+                        instructions: orders[i].instructions,
+                        open: orders[i].open,
+                        amount: amount,
+                        offerid: offerid,
+                    });
+                }
+            }
+        });
+
+        res.render('offersmade', { orders: offerOrders });
+    } else if (res.locals.isLoggedIn && !res.locals.isHelper) {
+        res.redirect('/');
+    } else {
+        res.redirect('/account/signup');
+    }
+});
+
+router.post(
+    '/removeoffer',
+    bodyParser.urlencoded({ extended: true }),
+    async (req, res) => {
+        const userId = decodeToken(req.cookies.access_token).id;
+        const { orderId, offerId } = req.body;
+
+        await Order.updateOne(
+            { _id: orderId },
+            {
+                $pullAll: {
+                    offers: [{ _id: offerId }],
+                },
+            }
+        );
+
+        await Offer.deleteOne({ _id: orderId });
+
+        res.redirect('/orders/offers');
     }
 );
 
