@@ -41,6 +41,8 @@ router.post(
                     username: username,
                     password: pass,
                     helper: false,
+                    stars: 0,
+                    reviews: 0,
                 });
                 account
                     .save()

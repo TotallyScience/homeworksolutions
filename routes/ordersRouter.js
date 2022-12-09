@@ -160,7 +160,7 @@ router.get('/offers', async (req, res) => {
         });
 
         res.render('offersmade', { orders: offerOrders });
-    } else if (res.locals.isLoggedIn && !res.locals.isHelper) {
+    } else if (!res.locals.isHelper) {
         res.redirect('/');
     } else {
         res.redirect('/account/signup');
@@ -173,20 +173,92 @@ router.post(
     async (req, res) => {
         const userId = decodeToken(req.cookies.access_token).id;
         const { orderId, offerId } = req.body;
-
-        await Order.updateOne(
-            { _id: orderId },
-            {
-                $pullAll: {
-                    offers: [{ _id: offerId }],
-                },
-            }
-        );
-
-        await Offer.deleteOne({ _id: orderId });
-
+        await removeOffer(orderId, offerId);
         res.redirect('/orders/offers');
     }
 );
+
+router.get('/offers/:orderid', async (req, res) => {
+    if (res.locals.isLoggedIn && !res.locals.isHelper) {
+        const id = decodeToken(req.cookies.access_token).id;
+        let orderid = req.params.orderid;
+
+        let offers = [];
+        await Order.findOne({ _id: orderid }).then(async (order) => {
+            if (order.open != true) {
+                res.redirect('/orders');
+            }
+            order = await order
+                .populate({
+                    path: 'offers',
+                    populate: {
+                        path: 'offererid',
+                        select: 'stars username',
+                    },
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            //console.log(order.offers[0].offererid.stars);
+            for (let i = 0; i < order.offers.length; i++) {
+                offers.push({
+                    id: order.offers[i]._id,
+                    orderid: order.offers[i].orderid,
+                    amount: order.offers[i].amount,
+                    stars: order.offers[i].offererid.stars,
+                    offererName: order.offers[i].offererid.username,
+                    offererid: order.offers[i].offererid._id,
+                });
+            }
+        });
+
+        res.render('seeoffers', { offers: offers });
+    } else if (res.locals.isHelper) {
+        res.redirect('/');
+    } else {
+        res.redirect('/account/signup');
+    }
+});
+
+router.get('/deleteall', async (req, res) => {
+    await Offer.deleteMany({});
+    await Order.deleteMany({});
+    res.redirect('/orders');
+});
+
+router.post('/offers/declineOffer', bodyParser.json(), async (req, res) => {
+    const { offerid, orderid } = req.body;
+    await removeOffer(orderid, offerid);
+});
+router.post('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
+    const { orderid, helperid } = req.body;
+    const id = decodeToken(req.cookies.access_token).id;
+    let ordererid = await Order.findOne({ _id: orderid }).catch((err) => {
+        console.log(err);
+    });
+    if (ordererid.userid == id) {
+        await Order.updateOne(
+            { _id: orderid },
+            {
+                open: false,
+                helperid: helperid,
+            }
+        );
+    }
+});
+
+async function removeOffer(orderId, offerId) {
+    await Order.updateOne(
+        { _id: orderId },
+        {
+            $pullAll: {
+                offers: [{ _id: offerId }],
+            },
+        }
+    );
+
+    await Offer.deleteOne({ _id: orderId });
+    return;
+}
 
 module.exports = router;

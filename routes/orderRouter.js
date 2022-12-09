@@ -52,7 +52,6 @@ router.post('/', bodyParser.urlencoded({ extended: true }), (req, res) => {
             deadline: deadline,
             instructions: instructions,
             open: true,
-            helperid: '',
         });
         order.save().catch((err) => {
             console.log(err);

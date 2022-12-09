@@ -19,6 +19,14 @@ const accountSchema = new Schema(
             type: Boolean,
             required: true,
         },
+        stars: {
+            type: Number,
+            required: true,
+        },
+        reviews: {
+            type: Number,
+            required: true,
+        },
     },
     { timestamps: true }
 );

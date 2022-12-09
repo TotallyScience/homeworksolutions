@@ -47,8 +47,8 @@ const orderSchema = new Schema(
         ],
 
         helperid: {
-            type: String,
-            required: false,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Account',
         },
     },
     { timestamps: true }
