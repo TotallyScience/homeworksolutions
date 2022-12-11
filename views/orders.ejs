@@ -30,12 +30,73 @@
                     &emsp;-<%=order.spacing%> spaced <br />
                 </p>
                 <p class="date">Due date: <%=order.deadline%></p>
+
                 <div class="buttonCon">
-                    <button class="common-button">See Offers</button>
+                    <% if(order.open == true) { %>
+                    <button
+                        class="common-button"
+                        onclick="window.open('/orders/offers/<%=order.id%>','_self')"
+                    >
+                        See Offers
+                    </button>
                     <p><%=order.offers.length%></p>
+                    <% } else {%>
+                    <div
+                        id="orderinstructions"
+                        style="white-space: pre-line; display: none"
+                    >
+                        <%=order.instructions%>
+                    </div>
+                    <div id="helperusername" style="display: none">
+                        <%=order.helperid.username%>
+                    </div>
+                    <div id="helperstars" style="display: none">
+                        <%=order.helperid.stars%>
+                    </div>
+                    <button
+                        class="common-button alt"
+                        onclick="showProgressModel()"
+                    >
+                        Details
+                    </button>
+                    <% }%>
                 </div>
             </div>
-            <% }); %> <% }; %>
+
+            <% if(order.open == false) { %>
+            <div id="popup" style="display: none; padding-bottom: 15px">
+                <p class="title"><%=order.class.toUpperCase()%></p>
+                <p class="user">
+                    Your order is being completed by
+                    <span class="bold"><%=order.helperid.username%> </span
+                    >⭐<%=order.helperid.stars%>
+                </p>
+                <hr />
+                <div class="details">
+                    <%=order.type%><br />
+                    &emsp;-<%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    &emsp;-<%=order.spacing%> spaced <br />
+                </div>
+                <div class="requirements">
+                    <p class="header">Requirements</p>
+                    <p class="norm" style="white-space: pre-line">
+                        <%=order.instructions%>
+                    </p>
+                </div>
+                <form action="/orders/offer" method="POST">
+                    <div class="buttonCon">
+                        <button
+                            type="button"
+                            class="common-button alt"
+                            onclick="hideModel()"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <%} }); %> <% }; %>
         </div>
         <div id="heading">
             <p class="h1">Past Orders</p>
@@ -91,12 +152,17 @@
                 </p>
                 <p class="date">Due date: <%=order.deadline%></p>
                 <div class="buttonCon">
-                    <button class="common-button">See Offers</button>
-                    <p><%=order.offers.length%></p>
+                    <button
+                        class="common-button alt"
+                        onclick="window.open('/orders/activeorder/<%=order._id%>', '_self')"
+                    >
+                        Details
+                    </button>
                 </div>
             </div>
-            <% }); %> <% }; %>
         </div>
+        <% }); %> <% }; %>
+
         <div id="heading">
             <p class="h1">
                 Requested Orders
@@ -192,6 +258,10 @@
         }
         function hideModel() {
             document.getElementById('popup').style.display = 'none';
+        }
+
+        function showProgressModel() {
+            document.getElementById('popup').style.display = '';
         }
 
         const queryString = window.location.search;

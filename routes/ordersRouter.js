@@ -15,15 +15,29 @@ router.get('/', async (req, res) => {
         const id = decodeToken(req.cookies.access_token).id;
         if (!res.locals.isHelper) {
             //Regular user
-            Order.find({ userid: id, open: true }).then((orders) => {
-                Order.find({ userid: id, open: false }).then((pastOrders) => {
-                    res.render('orders', {
-                        orders: orders,
-                        pastOrders: pastOrders,
-                        ordersNav: 'selected',
-                    });
-                });
-            });
+            Order.find({ userid: id, completed: false }).then(
+                async (orders) => {
+                    for (let i = 0; i < orders.length; i++) {
+                        orders[i] = await orders[i]
+                            .populate({
+                                path: 'helperid',
+                                select: 'stars username',
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }
+                    Order.find({ userid: id, completed: true }).then(
+                        (pastOrders) => {
+                            res.render('orders', {
+                                orders: orders,
+                                pastOrders: pastOrders,
+                                ordersNav: 'selected',
+                            });
+                        }
+                    );
+                }
+            );
         } else {
             //Helper
             var acceptedOrderDetails = [];
@@ -231,7 +245,7 @@ router.post('/offers/declineOffer', bodyParser.json(), async (req, res) => {
     await removeOffer(orderid, offerid);
 });
 router.post('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
-    const { orderid, helperid } = req.body;
+    const { orderid, helperid, amount } = req.body;
     const id = decodeToken(req.cookies.access_token).id;
     let ordererid = await Order.findOne({ _id: orderid }).catch((err) => {
         console.log(err);
@@ -242,8 +256,28 @@ router.post('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
             {
                 open: false,
                 helperid: helperid,
+                price: amount,
             }
         );
+    }
+});
+
+router.get('/activeorder/:orderid', async (req, res) => {
+    if (res.locals.isLoggedIn && res.locals.isHelper) {
+        const id = decodeToken(req.cookies.access_token).id;
+        let orderid = req.params.orderid;
+
+        await Order.findOne({ _id: orderid }).then(async (order) => {
+            if (order.open == true || order.helperid != id) {
+                res.redirect('/orders');
+            }
+            order = await order.populate('userid');
+            res.render('helper/activeorder', { order: order });
+        });
+    } else if (!res.locals.isHelper) {
+        res.redirect('/');
+    } else {
+        res.redirect('/account/signup');
     }
 });
 

@@ -13,7 +13,7 @@
                     >(Go to orders)</span
                 >
             </p>
-            <button onclick="window.open('/orders', '_self')">
+            <button onclick="location.reload();">
                 <img
                     src="https://cdn-icons-png.flaticon.com/512/61/61225.png"
                 />
@@ -31,9 +31,7 @@
                     <span style="font-weight: 100">⭐<%=offer.stars%></span>
                 </p>
                 <br />
-                <p class="class" id="amount">
-                    $<%=offer.amount.toUpperCase()%>
-                </p>
+                <p class="class" id="amount">$<%=offer.amount%></p>
                 <div class="realdesc" style="display: none"></div>
 
                 <div class="buttonCon">
@@ -45,13 +43,17 @@
                     </button>
                     <button
                         class="common-button"
-                        onclick="Accept('<%=offer.orderid%>', '<%=offer.offererid%>')"
+                        onclick="Accept('<%=offer.orderid%>', '<%=offer.offererid%>', '<%=offer.amount%>')"
                     >
                         Accept
                     </button>
                 </div>
             </div>
-            <% }); %> <% }; %>
+            <% }); }else {%>
+            <div id="heading">
+                <p class="h2">You have no offers.</p>
+            </div>
+            <% }; %>
         </div>
         <script>
             async function Decline(offerid, orderid) {
@@ -64,11 +66,11 @@
                 });
                 window.open('/orders', '_self');
             }
-            async function Accept(orderid, helperid) {
+            async function Accept(orderid, helperid, amount) {
                 await fetch('acceptOffer', {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },
-                    body: JSON.stringify({ orderid, helperid }),
+                    body: JSON.stringify({ orderid, helperid, amount }),
                 });
                 window.open('/orders', '_self');
             }

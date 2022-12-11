@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../includes/head.ejs') %>
+        <link rel="stylesheet" href="/styles/orders.css" />
+    </head>
+    <body>
+        <%- include('../includes/navbar.ejs') %>
+        <div id="heading">
+            <p class="h1">
+                Order from <%= order.userid.username %>
+                <span class="past" onclick="window.open('/orders','_self')"
+                    >(Go to orders)</span
+                >
+            </p>
+        </div>
+        <div id="row">
+            <div class="textfield">
+                <form
+                    method="post"
+                    onSubmit="return confirm('Are you sure you want to submit?')"
+                >
+                    <textarea
+                        id="w3review"
+                        name="instructions"
+                        rows="20"
+                        cols="50"
+                        placeholder="Type all the answers for the assignment:
+(feel free to attach google drive/google doc links with files/screenshots)"
+                    ></textarea>
+                    <button
+                        type="submit"
+                        class="common-button"
+                        onclick="window.onbeforeunload = null;"
+                    >
+                        Submit
+                    </button>
+                </form>
+            </div>
+            <div class="details">
+                <p class="bold">Details</p>
+                <p class="norm">
+                    <%=order.type%><br />
+                    &emsp;-<%=order.details%><br />
+                    <%=order.size%> pages<br />
+                    &emsp;-<%=order.spacing%> spaced <br />
+                </p>
+                <div>
+                    <p class="bold">Requirements</p>
+                    <div class="requirementscon">
+                        <p class="requirements"><%=order.instructions%></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            // Enable navigation prompt
+            window.onbeforeunload = function () {
+                return true;
+            };
+            // Remove navigation prompt
+        </script>
+    </body>
+</html>

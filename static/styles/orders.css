@@ -137,6 +137,7 @@ body {
     -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
     -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
     box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
+    z-index: 100;
 }
 
 #popup .title {
@@ -205,4 +206,83 @@ body {
     left: -10px;
     z-index: 1;
     opacity: 0.7;
+}
+
+#maindetails {
+    margin-top: 50px;
+    margin-left: 50px;
+}
+
+#maindetails p {
+    font-size: 1.3rem;
+    line-height: 30px;
+    margin-left: 15px;
+}
+
+#maindetails p.bold {
+    font-weight: bold;
+    margin-left: 0px;
+}
+
+#row {
+    display: flex;
+    width: 100%;
+    gap: 50px;
+}
+
+#row .textfield {
+    flex: 70%;
+    text-align: center;
+}
+
+#row .textfield button {
+    margin-top: 30px;
+    padding: 1%;
+    padding-right: 3%;
+    padding-left: 3%;
+}
+
+#row .details {
+    flex: 30%;
+}
+
+#row .details p {
+    font-size: 1.3rem;
+}
+
+#row .details p.norm {
+    margin-bottom: 50px;
+}
+
+#row .details p.bold {
+    margin-bottom: 20px;
+}
+
+#row .details p.requirements {
+    white-space: pre-line;
+    width: 90%;
+}
+
+#row .details div .requirementscon {
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+}
+
+#row div textarea {
+    margin-left: 50px;
+    margin-top: 10px;
+    background-color: transparent;
+    width: 90%;
+    height: 650px;
+    overflow-y: auto;
+    border-radius: 15px;
+    border: solid 1px black;
+    outline: none;
+    font-size: 1.2rem;
+    padding-left: 15px;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 2px 2px 3px 2px var(--box-shadow-color);
+    resize: none;
 }

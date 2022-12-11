@@ -50,6 +50,13 @@ const orderSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Account',
         },
+        price: {
+            type: String,
+        },
+        completed: {
+            type: Boolean,
+            required: true,
+        },
     },
     { timestamps: true }
 );
