@@ -109,18 +109,19 @@
         <div id="current">
             <% if(pastOrders.length > 0) { %> <% pastOrders.forEach(order => {
             %>
-            <div>
-                <p class="class"><%=order.class.toUpperCase()%></p>
-                <p class="desc">
-                    <%=order.type%><br />
-                    <%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    <%=order.spacing%> spaced
-                </p>
-                <p class="date">Due date: <%=order.deadline%></p>
+            <div class="con">
                 <div>
-                    <button class="common-button">See Offers</button>
-                    <p>0</p>
+                    <p class="class"><%=order.class.toUpperCase()%></p>
+                    <p class="desc">
+                        <%=order.type%><br />
+                        <%=order.details%><br />
+                        <%=order.size%> pages<br />
+                        <%=order.spacing%> spaced
+                    </p>
+                    <p class="date">Due date: <%=order.deadline%></p>
+                    <div class="buttonCon">
+                        <button class="common-button alt">Details</button>
+                    </div>
                 </div>
             </div>
             <% }); }%>
@@ -131,7 +132,7 @@
         <%- include('includes/navbar.ejs') %>
         <div id="heading">
             <p class="h1">
-                Active Orders <span class="past">(See past orders)</span>
+                Active Orders <span class="past">(See completed orders)</span>
             </p>
         </div>
         <div id="heading">
@@ -140,8 +141,8 @@
             <% } %>
         </div>
         <div id="current">
-            <% if(acceptedOrders.length > 0) { %> <%
-            acceptedOrders.forEach(order => { %>
+            <% if(acceptedOrders.length > 0) { acceptedOrders.forEach(order => {
+            %>
             <div class="con">
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
@@ -160,9 +161,9 @@
                     </button>
                 </div>
             </div>
-        </div>
-        <% }); %> <% }; %>
 
+            <% }); %> <% }; %>
+        </div>
         <div id="heading">
             <p class="h1">
                 Requested Orders

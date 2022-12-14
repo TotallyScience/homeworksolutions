@@ -79,6 +79,7 @@ router.get('/', async (req, res) => {
             let acceptedOrders = await Order.find({
                 open: false,
                 helperid: id,
+                completed: false,
             });
             res.render('orders', {
                 orders: acceptedOrderDetails,
@@ -259,6 +260,7 @@ router.post('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
                 price: amount,
             }
         );
+        redirect('/orders');
     }
 });
 
@@ -275,6 +277,54 @@ router.get('/activeorder/:orderid', async (req, res) => {
             res.render('helper/activeorder', { order: order });
         });
     } else if (!res.locals.isHelper) {
+        res.redirect('/');
+    } else {
+        res.redirect('/account/signup');
+    }
+});
+
+router.post(
+    '/activeorder/:orderid',
+    bodyParser.urlencoded({ extended: true }),
+    async (req, res) => {
+        if (res.locals.isLoggedIn && res.locals.isHelper) {
+            const id = decodeToken(req.cookies.access_token).id;
+            let orderid = req.params.orderid;
+            console.log(req.body);
+            await Order.updateOne(
+                { _id: orderid },
+                {
+                    completed: true,
+                    answers: req.body.answers,
+                }
+            ).then(async (order) => {
+                res.redirect('/orders');
+            });
+        } else if (!res.locals.isHelper) {
+            res.redirect('/');
+        } else {
+            res.redirect('/account/signup');
+        }
+    }
+);
+
+router.get('/completedorder/:orderid', async (req, res) => {
+    if (res.locals.isLoggedIn && !res.locals.isHelper) {
+        const id = decodeToken(req.cookies.access_token).id;
+        let orderid = req.params.orderid;
+
+        await Order.findOne({ _id: orderid }).then(async (order) => {
+            if (
+                order.open == true ||
+                order.completed == false ||
+                order.userid != id
+            ) {
+                res.redirect('/orders');
+            }
+            order = await order.populate('helperid');
+            res.render('helper/activeorder', { order: order });
+        });
+    } else if (res.locals.isHelper) {
         res.redirect('/');
     } else {
         res.redirect('/account/signup');

@@ -53,6 +53,9 @@ const orderSchema = new Schema(
         price: {
             type: String,
         },
+        answers: {
+            type: String,
+        },
         completed: {
             type: Boolean,
             required: true,
