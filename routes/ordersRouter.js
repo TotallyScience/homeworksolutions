@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const Order = require('../models/order');
 const Account = require('../models/account');
 const Offer = require('../models/offer');
+const fs = require('fs');
+const archiver = require('archiver');
 
 const { decodeToken } = require('../middleware/isLoggedIn.js');
 
@@ -72,6 +74,7 @@ router.get('/', async (req, res) => {
                             deadline: orders[i].deadline,
                             instructions: orders[i].instructions,
                             open: orders[i].open,
+                            files: orders[i].files.length,
                         });
                     }
                 }
@@ -260,7 +263,7 @@ router.post('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
                 price: amount,
             }
         );
-        redirect('/orders');
+        res.redirect('/orders');
     }
 });
 
@@ -325,7 +328,40 @@ router.get('/completedorder/:orderid', async (req, res) => {
             res.render('helper/activeorder', { order: order });
         });
     } else if (res.locals.isHelper) {
-        res.redirect('/');
+        res.redirect('/orders');
+    } else {
+        res.redirect('/account/signup');
+    }
+});
+
+router.get('/downloadfiles/:orderid', async (req, res) => {
+    if (res.locals.isLoggedIn && res.locals.isHelper) {
+        const id = decodeToken(req.cookies.access_token).id;
+        let orderid = req.params.orderid;
+
+        await Order.findOne({ _id: orderid })
+            .select('files fileTypes')
+            .then(async (order) => {
+                //console.log(order.files);
+
+                const files = order.files;
+
+                const zip = archiver('zip');
+
+                res.attachment('files.zip');
+                zip.pipe(res);
+
+                for (let i = 0; i < files.length; i++) {
+                    let extension = order.fileTypes[i].split('/')[1];
+                    console.log(extension);
+                    zip.append(files[i], {
+                        name: `file-${Date.now()}.${extension}`,
+                    });
+                }
+                zip.finalize();
+            });
+    } else if (!res.locals.isHelper) {
+        res.redirect('/orders');
     } else {
         res.redirect('/account/signup');
     }

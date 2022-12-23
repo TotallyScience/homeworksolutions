@@ -35,6 +35,16 @@ const orderSchema = new Schema(
             type: String,
             required: true,
         },
+        files: [
+            {
+                type: Buffer,
+            },
+        ],
+        fileTypes: [
+            {
+                type: String,
+            },
+        ],
         open: {
             type: Boolean,
             required: true,

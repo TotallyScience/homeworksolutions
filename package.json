@@ -19,14 +19,17 @@
     },
     "homepage": "https://github.com/TotallyScience/homeworksolutions#readme",
     "dependencies": {
+        "archiver": "^5.3.1",
         "bcrypt": "^5.1.0",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.0.3",
         "ejs": "^3.1.8",
         "express": "^4.18.2",
         "express-validator": "^6.14.2",
+        "file-type": "^18.0.0",
         "fs": "^0.0.1-security",
         "jsonwebtoken": "^8.5.1",
-        "mongoose": "^6.7.3"
+        "mongoose": "^6.7.3",
+        "multer": "^1.4.5-lts.1"
     }
 }

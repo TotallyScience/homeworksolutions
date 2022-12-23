@@ -62,41 +62,7 @@
                     <% }%>
                 </div>
             </div>
-
-            <% if(order.open == false) { %>
-            <div id="popup" style="display: none; padding-bottom: 15px">
-                <p class="title"><%=order.class.toUpperCase()%></p>
-                <p class="user">
-                    Your order is being completed by
-                    <span class="bold"><%=order.helperid.username%> </span
-                    >⭐<%=order.helperid.stars%>
-                </p>
-                <hr />
-                <div class="details">
-                    <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
-                </div>
-                <div class="requirements">
-                    <p class="header">Requirements</p>
-                    <p class="norm" style="white-space: pre-line">
-                        <%=order.instructions%>
-                    </p>
-                </div>
-                <form action="/orders/offer" method="POST">
-                    <div class="buttonCon">
-                        <button
-                            type="button"
-                            class="common-button alt"
-                            onclick="hideModel()"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <%} }); %> <% }; %>
+            <% }); }%>
         </div>
         <div id="heading">
             <p class="h1">Past Orders</p>
@@ -125,6 +91,39 @@
                 </div>
             </div>
             <% }); }%>
+        </div>
+        <div id="popup" style="display: none; padding-bottom: 15px">
+            <p class="title"></p>
+            <p class="user">
+                Your order is being completed by
+                <span class="bold"></span>⭐
+            </p>
+            <hr />
+            <div class="details">
+                <br />
+                &emsp;-<br />
+                pages<br />
+                &emsp;- spaced <br />
+            </div>
+            <div id="download">
+                <br />
+                <a id="fileslink" href="">Download Files</a>
+            </div>
+            <div class="requirements">
+                <p class="header">Requirements</p>
+                <p class="norm" style="white-space: pre-line"></p>
+            </div>
+            <form action="/orders/offer" method="POST">
+                <div class="buttonCon">
+                    <button
+                        type="button"
+                        class="common-button alt"
+                        onclick="hideModel()"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </body>
     <% } else {%>
@@ -183,6 +182,7 @@
             <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
             <div class="con" id="<%=order.id%>">
                 <p class="username" style="display: none"><%=order.user%></p>
+                <p class="files" style="display: none"><%=order.files%></p>
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
@@ -213,6 +213,10 @@
             <p class="user">Requested by <span id="popUser"></span></p>
             <hr />
             <div class="details" id="popDetails"></div>
+            <div id="download">
+                <br />
+                <a id="fileslink" href="">Download Files</a>
+            </div>
             <div class="requirements">
                 <p class="header">Requirements</p>
                 <p class="norm" style="white-space: pre-line" id="popReqs"></p>
@@ -249,6 +253,17 @@
             document.getElementById('popUser').innerHTML = document
                 .getElementById(id)
                 .querySelector('.username').innerHTML;
+            if (
+                document.getElementById(id).querySelector('.files').innerHTML >
+                0
+            ) {
+                document.getElementById('download').style.display = '';
+                document
+                    .getElementById('fileslink')
+                    .setAttribute('href', `/orders/downloadfiles/${id}`);
+            } else {
+                document.getElementById('download').style.display = 'none';
+            }
             document.getElementById('popReqs').innerHTML = document
                 .getElementById(id)
                 .querySelector('.realdesc').innerHTML;

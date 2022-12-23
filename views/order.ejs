@@ -7,7 +7,7 @@
 
     <body>
         <%- include('includes/navbar.ejs') %>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div id="top-bar">
                 <p style="color: red"><%=locals.error%></p>
                 <div>
@@ -34,10 +34,10 @@
                 </div>
                 <div>
                     <p class="heading">Assignment Size:</p>
-                    <input type="number" placeholder="# of Pages" name="size" />
+                    <input type="number" placeholder="# of Pages" name="size" value="<%=locals.form?.size%>"/>
                     <select name="spacing">
                         <option value="Double">Double Spaced</option>
-                        <option value="Single">Single Spaced</option>
+                        <option <%if(locals.form?.spacing == "Single"){%> selected="selected" <%}%> value="Single">Single Spaced</option>
                     </select>
                 </div>
                 <div>
@@ -47,6 +47,7 @@
                         id="start"
                         name="deadline"
                         max="2025-12-31"
+                        value="<%=locals.form?.deadline%>"
                     />
                 </div>
                 <div class="instructions">
@@ -58,7 +59,18 @@
                         cols="50"
                         placeholder="List all the requirements for the assignment:
 (feel free to attach google drive/google doc links with files/screenshots)"
-                    ></textarea>
+                    >
+<%=locals.form?.instructions%></textarea
+                    >
+                </div>
+                <div>
+                    <p class="heading">
+                        Files:
+                        <span style="font-weight: 100; font-size: 1.2rem"
+                            >(Optional - You can select more than one)</span
+                        >
+                    </p>
+                    <input type="file" name="pdf" multiple />
                 </div>
 
                 <button class="common-button" type="submit">
