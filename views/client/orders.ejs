@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%- include('includes/head.ejs') %>
-        <link rel="stylesheet" href="/styles/orders.css" />
+        <%- include('../includes/head.ejs') %>
+        <link rel="stylesheet" href="/styles/client/orders.css" />
     </head>
 
-    <% if(!locals.isHelper) { %>
     <body>
-        <%- include('includes/navbar.ejs') %>
+        <%- include('../includes/navbar.ejs') %>
         <div id="heading">
             <p class="h1">Current Orders</p>
         </div>
@@ -137,159 +136,14 @@
                     >
                         Cancel
                     </button>
+                    <button type="button" class="common-button" onclick="">
+                        Chat
+                    </button>
                 </div>
             </form>
         </div>
     </body>
-    <% } else {%>
-    <body>
-        <%- include('includes/navbar.ejs') %>
-        <div id="heading">
-            <p class="h1">
-                Active Orders <span class="past">(See completed orders)</span>
-            </p>
-        </div>
-        <div id="heading">
-            <% if(acceptedOrders.length <= 0) {%>
-            <p class="h2">You have no active orders.</p>
-            <% } %>
-        </div>
-        <div id="current">
-            <% if(acceptedOrders.length > 0) { acceptedOrders.forEach(order => {
-            %>
-            <div class="con">
-                <p class="class"><%=order.class.toUpperCase()%></p>
-                <p class="desc">
-                    <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
-                </p>
-                <p class="date">Due date: <%=order.deadline%></p>
-                <div class="buttonCon">
-                    <button
-                        class="common-button alt"
-                        onclick="window.open('/orders/activeorder/<%=order._id%>', '_self')"
-                    >
-                        Details
-                    </button>
-                </div>
-            </div>
-
-            <% }); %> <% }; %>
-        </div>
-        <div id="heading">
-            <p class="h1">
-                Requested Orders
-                <span
-                    class="past"
-                    onclick="window.open('/offer/offers', '_self')"
-                    >(See your offers)</span
-                >
-            </p>
-            <button onclick="window.open('/orders', '_self')">
-                <img
-                    src="https://cdn-icons-png.flaticon.com/512/61/61225.png"
-                />
-            </button>
-        </div>
-        <div id="current">
-            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
-            <div class="con" id="<%=order.id%>">
-                <p class="username" style="display: none"><%=order.user%></p>
-                <p class="files" style="display: none"><%=order.files%></p>
-                <p class="class"><%=order.class.toUpperCase()%></p>
-                <p class="desc">
-                    <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
-                </p>
-                <br />
-                <p class="class">Requirements</p>
-                <div class="realdesc" style="white-space: pre-line">
-                    <%=order.instructions%>
-                </div>
-                <p class="date">Due date: <%=order.deadline%></p>
-
-                <div class="buttonCon">
-                    <button
-                        class="common-button alt"
-                        onclick="showModel('<%=order.id%>')"
-                    >
-                        Details
-                    </button>
-                </div>
-            </div>
-            <% }); %> <% }; %>
-        </div>
-        <div id="popup" style="display: none">
-            <p id="title"></p>
-            <p class="user">Requested by <span id="popUser"></span></p>
-            <hr />
-            <div class="details" id="popDetails"></div>
-            <div id="download">
-                <br />
-                <a id="fileslink" href="">Download Files</a>
-            </div>
-            <div class="requirements">
-                <p class="header">Requirements</p>
-                <p class="norm" style="white-space: pre-line" id="popReqs"></p>
-            </div>
-            <form action="/offer" method="POST">
-                <div class="buttonCon">
-                    <button
-                        type="button"
-                        class="common-button alt"
-                        onclick="hideModel()"
-                    >
-                        Cancel
-                    </button>
-
-                    <input style="display: none" name="orderId" id="orderId" />
-                    <div class="numDiv">
-                        <input
-                            type="number"
-                            id="offerAmount"
-                            placeholder="0.00"
-                            name="amount"
-                        />
-                    </div>
-                    <button type="submit" class="common-button">Offer</button>
-                </div>
-            </form>
-        </div>
-    </body>
-    <% }%>
     <script>
-        function showModel(id) {
-            document.getElementById('popup').style.display = '';
-            document.getElementById('orderId').value = id;
-            document.getElementById('popUser').innerHTML = document
-                .getElementById(id)
-                .querySelector('.username').innerHTML;
-            if (
-                document.getElementById(id).querySelector('.files').innerHTML >
-                0
-            ) {
-                document.getElementById('download').style.display = '';
-                document
-                    .getElementById('fileslink')
-                    .setAttribute('href', `/orders/downloadfiles/${id}`);
-            } else {
-                document.getElementById('download').style.display = 'none';
-            }
-            document.getElementById('popReqs').innerHTML = document
-                .getElementById(id)
-                .querySelector('.realdesc').innerHTML;
-            document.getElementById('popDetails').innerHTML = document
-                .getElementById(id)
-                .querySelector('.desc').innerHTML;
-            document.getElementById('title').innerHTML = document
-                .getElementById(id)
-                .querySelector('.class').innerHTML;
-            document.getElementById('offerAmount').value = '';
-        }
         function hideModel() {
             document.getElementById('popup').style.display = 'none';
         }
@@ -326,13 +180,6 @@
             document.getElementById('popDetails').innerHTML = document
                 .getElementById(id)
                 .querySelector('.desc').innerHTML;
-        }
-
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        if (urlParams.get('retrack') == 'true') {
-            showModel(urlParams.get('id'));
-            alert('You must offer a valid amount');
         }
     </script>
 </html>

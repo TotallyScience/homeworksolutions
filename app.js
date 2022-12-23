@@ -42,3 +42,4 @@ app.get('/helpers', (req, res) => {
 app.use('/account', accountRouter);
 app.use('/order', orderRouter);
 app.use('/orders', ordersRouter);
+app.use('/offer', ordersRouter);

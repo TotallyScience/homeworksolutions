@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
                     }
                     Order.find({ userid: id, completed: true }).then(
                         (pastOrders) => {
-                            res.render('orders', {
+                            res.render('client/orders', {
                                 orders: orders,
                                 pastOrders: pastOrders,
                                 ordersNav: 'selected',
@@ -84,7 +84,7 @@ router.get('/', async (req, res) => {
                 helperid: id,
                 completed: false,
             });
-            res.render('orders', {
+            res.render('helper/orders', {
                 orders: acceptedOrderDetails,
                 acceptedOrders: acceptedOrders,
                 ordersNav: 'selected',
@@ -335,7 +335,7 @@ router.get('/completedorder/:orderid', async (req, res) => {
 });
 
 router.get('/downloadfiles/:orderid', async (req, res) => {
-    if (res.locals.isLoggedIn && res.locals.isHelper) {
+    if (res.locals.isLoggedIn) {
         const id = decodeToken(req.cookies.access_token).id;
         let orderid = req.params.orderid;
 
@@ -360,8 +360,6 @@ router.get('/downloadfiles/:orderid', async (req, res) => {
                 }
                 zip.finalize();
             });
-    } else if (!res.locals.isHelper) {
-        res.redirect('/orders');
     } else {
         res.redirect('/account/signup');
     }
