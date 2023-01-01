@@ -32,4 +32,13 @@ const checkLogin = async (req, res, next) => {
     next();
 };
 
-module.exports = { decodeToken, isLoggedIn, checkLogin };
+// Middleware for requiring login on a certain page
+const requireLogin = async (req, res, next) => {
+    if (!(await isLoggedIn(req.cookies.access_token, res))) {
+        return res.redirect('/account/signup');
+    }
+
+    next();
+};
+
+module.exports = { decodeToken, isLoggedIn, checkLogin, requireLogin };

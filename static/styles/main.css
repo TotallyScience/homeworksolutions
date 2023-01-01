@@ -23,6 +23,7 @@ p2,
 a,
 button,
 label,
+textarea,
 div {
     color: var(--dark-color);
     font-family: 'Rubik', sans-serif;

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('includes/head.ejs') %>
+        <link rel="stylesheet" href="/styles/chats.css" />
+    </head>
+    <% console.log(chatters.length); if(chatters.length > 0) { %>
+    <body>
+        <%- include('includes/navbar.ejs') %>
+        <div id="chatCon">
+            <div class="chats">
+                <% chatters.forEach(chatter => {
+                %>
+                <div
+                    class="chatter <%if(currentChatter._id.toString() == chatter._id.toString()){%>selected<%}%>"
+                >
+                    <div>
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        />
+                        <p><%=chatter.username%></p>
+                    </div>
+                    <hr />
+                </div>
+                <% });%>
+            </div>
+            
+            <div class="currentChat">
+                <div class="infoBar">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    />
+                    <p><%=currentChatter.username%></p>
+                </div>
+                <div class="chatView">
+                    <% if(chats.length > 0) { %> <% chats.forEach(chat => { %>
+                    <div <%if(chat.sender == 'You'){%>class='you'<%}%>>
+                        <p class="name bold"><%=chat.sender%></p>
+                        <p class="message"><%=chat.message%></p>
+                    </div>
+                    <% });}%>
+                </div>
+
+                <textarea
+                    id="sendMessage"
+                    class="writeChat"
+                    placeholder="Write a message..."
+                ></textarea>
+            </div>
+        </div>
+        <script>
+            var sendMessage = document.getElementById('sendMessage'); // Here your text input element
+            sendMessage.addEventListener('keyup', function (event) {
+                if (event.keyCode === 13 && !event.shiftKey) {
+                    // 13 is the number of Enter key on keyboard
+                    fetch('/chat/send', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            recipient:'<%=currentChatter._id%>',
+                            message: sendMessage.value
+                        }),
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                        }
+                    });
+                    event.preventDefault();
+                    sendMessage.value = '';
+                    //you could get the id of a form and do form.submit();
+                }
+            });
+        </script>
+    </body>
+    <% } else {%>
+        <body>
+        <%- include('includes/navbar.ejs') %>
+        <div id="chatCon">
+            <h1>You have no chats currently.</h1>
+        </div>
+    </body>
+    <% }%>
+</html>

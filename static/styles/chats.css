@@ -1,0 +1,125 @@
+#chatCon {
+    width: 1000px;
+    height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    flex: 1 4;
+}
+
+#chatCon .chats,
+#chatCon .currentChat {
+    width: 25%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/*Chat options*/
+
+#chatCon .chats {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border: 2px solid rgb(0, 0, 0);
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+#chatCon .chats .chatter {
+    width: 100%;
+    height: 60px;
+    cursor: pointer;
+    padding-top: 10px;
+}
+
+#chatCon .chats .chatter.selected {
+    background-color: rgba(0, 225, 0, 0.5);
+}
+
+#chatCon .chats .chatter div {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#chatCon .chats div img {
+    width: 50px;
+    margin-left: 15px;
+}
+
+#chatCon .chats div p {
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    font-size: 1rem;
+}
+
+#chatCon .chats hr {
+    width: 90%;
+}
+
+/*Current Chat*/
+
+#chatCon .currentChat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(0, 0, 0);
+    border-left: 0px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+#chatCon .infoBar {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid black;
+}
+
+#chatCon .infoBar img {
+    width: 50px;
+    margin-left: 15px;
+}
+
+#chatCon .infoBar p {
+    font-size: 1rem;
+    margin-left: 15px;
+}
+
+#chatCon .infoBar {
+    width: 100%;
+    height: 10%;
+}
+
+#chatCon .chatView {
+    width: 100%;
+    height: 80%;
+    overflow-y: auto;
+}
+
+#chatCon .writeChat {
+    width: 100%;
+    height: 10%;
+}
+
+#chatCon .chatView div {
+    background-color: var(--light-color);
+    padding: 10px;
+}
+
+#chatCon .chatView div .message {
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+#chatCon .chatView div.you {
+    background-color: rgba(0, 225, 0, 0.2);
+}
+
+#chatCon .writeChat {
+    border: 0;
+    border-top: 2px solid black;
+    outline: 0;
+    font-size: 1.1rem;
+}

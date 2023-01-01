@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const accountRouter = require('./routes/accountRouter');
 const orderRouter = require('./routes/orderRouter');
 const ordersRouter = require('./routes/ordersRouter');
+const chatRouter = require('./routes/chatRouter');
 
 const { checkLogin } = require('./middleware/isLoggedIn.js');
 
@@ -43,3 +44,4 @@ app.use('/account', accountRouter);
 app.use('/order', orderRouter);
 app.use('/orders', ordersRouter);
 app.use('/offer', ordersRouter);
+app.use('/chat', chatRouter);

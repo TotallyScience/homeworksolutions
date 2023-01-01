@@ -27,6 +27,12 @@ const accountSchema = new Schema(
             type: Number,
             required: true,
         },
+        chats: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Account',
+            },
+        ],
     },
     { timestamps: true }
 );
