@@ -82,7 +82,6 @@ router.post('/login', bodyParser.urlencoded({ extended: true }), (req, res) => {
     } else {
         Account.find({ email: email })
             .then((user) => {
-                console.log('here');
                 if (!user[0]) {
                     res.render('login', {
                         error: error,

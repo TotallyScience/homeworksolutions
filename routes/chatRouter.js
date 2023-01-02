@@ -1,8 +1,15 @@
 const express = require('express');
+const app = express();
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const Account = require('../models/account');
 const Message = require('../models/message');
+
+const server = require('http').Server(app);
+
+const io = require('socket.io')(server);
+
+server.listen(3001);
 
 const { decodeToken, requireLogin } = require('../middleware/isLoggedIn.js');
 
@@ -15,13 +22,18 @@ router.get('/', requireLogin, async (req, res) => {
     //else, send the most recent chat to be opened if there is not a user query
     //get the most recent 25 messages from the chat
     const id = decodeToken(req.cookies.access_token).id;
+
+    let messageLimit = 25;
+    if (req.query.limitMessages) {
+        messageLimit = req.query.limitMessages;
+    }
+
     let chatters = await Account.findOne(
         { _id: id },
         { chats: 1, _id: 0 }
     ).catch((err) => {
         console.log(err);
     });
-    console.log(chatters);
 
     chatters = await chatters
         .populate({
@@ -34,6 +46,7 @@ router.get('/', requireLogin, async (req, res) => {
     chatters = chatters.chats;
 
     if (chatters.length > 0) {
+        startSockets();
         let chatter;
         if (!req.query.user) {
             //there is no user parameter or there is one but you do not have a chat with it
@@ -56,9 +69,14 @@ router.get('/', requireLogin, async (req, res) => {
                 { sender: id, recipient: chatter._id },
                 { sender: chatter._id, recipient: id },
             ],
-        }).catch((err) => {
-            console.log(err);
-        });
+        })
+            .sort({ createdAt: -1 })
+            .limit(messageLimit)
+            .catch((err) => {
+                console.log(err);
+            });
+
+        chats.reverse();
 
         Object.keys(chats).forEach(function (key, index) {
             if (chats[key].sender == id) {
@@ -79,6 +97,7 @@ router.get('/', requireLogin, async (req, res) => {
             chatters: chatters,
             currentChatter: chatter,
             chats: chats,
+            userid: id,
         });
     } else {
         res.render('chats', { chatters: chatters });
@@ -99,14 +118,14 @@ router.post('/send', bodyParser.json(), async (req, res) => {
         console.log(err);
     });
     if (!recipientUser.chats.includes(sender)) {
-        user.chats.push(sender);
-        await user.save().catch((err) => {
+        recipientUser.chats.push(sender);
+        await recipientUser.save().catch((err) => {
             console.log(err);
         });
     }
     if (!senderUser.chats.includes(recipient)) {
-        user.chats.push(recipient);
-        await user.save().catch((err) => {
+        senderUser.chats.push(recipient);
+        await senderUser.save().catch((err) => {
             console.log(err);
         });
     }
@@ -148,6 +167,21 @@ router.get('/newchat', async (req, res) => {
     }
 
     res.redirect(`/chat?user=${recipient}`);
+});
+
+function startSockets() {}
+
+io.on('connection', (socket) => {
+    console.log('here me yell');
+    socket.on('join-room', (room) => {
+        console.log('bam');
+        socket.join(room);
+    });
+    socket.on('send-message', (room, message) => {
+        console.log('test');
+        socket.to(room).broadcast.emit('message', message);
+        //message is sent do db in different function
+    });
 });
 
 module.exports = router;

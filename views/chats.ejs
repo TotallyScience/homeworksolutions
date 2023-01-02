@@ -3,15 +3,16 @@
     <head>
         <%- include('includes/head.ejs') %>
         <link rel="stylesheet" href="/styles/chats.css" />
+        <script src="https://cdn.socket.io/socket.io-3.0.0.js"></script>
     </head>
-    <% console.log(chatters.length); if(chatters.length > 0) { %>
+    <% if(chatters.length > 0) { %>
     <body>
         <%- include('includes/navbar.ejs') %>
         <div id="chatCon">
             <div class="chats">
                 <% chatters.forEach(chatter => {
                 %>
-                <div
+                <div onclick="window.open('/chat?user=<%=chatter._id.toString()%>', '_self')"
                     class="chatter <%if(currentChatter._id.toString() == chatter._id.toString()){%>selected<%}%>"
                 >
                     <div>
@@ -32,8 +33,15 @@
                     />
                     <p><%=currentChatter.username%></p>
                 </div>
-                <div class="chatView">
-                    <% if(chats.length > 0) { %> <% chats.forEach(chat => { %>
+                <div class="chatView" id="chatView">
+
+                    <% if(chats.length > 0) { %> 
+                        <% if(chats.length > 24) { %>
+                        <div class="loadMoreCon">
+                            <button onclick="loadMore()">Load more messages</button>   
+                        </div>
+                        <% } %>
+                    <% chats.forEach(chat => { %>
                     <div <%if(chat.sender == 'You'){%>class='you'<%}%>>
                         <p class="name bold"><%=chat.sender%></p>
                         <p class="message"><%=chat.message%></p>
@@ -41,19 +49,45 @@
                     <% });}%>
                 </div>
 
-                <textarea
+                <div class="writeChat">
+                    <input type="text"
                     id="sendMessage"
-                    class="writeChat"
                     placeholder="Write a message..."
-                ></textarea>
+                    ></textarea>
+                </div>
+                    
             </div>
         </div>
         <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            let chatterid = '<%=currentChatter._id.toString()%>';
+            let userid = '<%=userid%>';
+            if(chatterid.localeCompare(userid) >= 1)
+            {
+                var roomid = chatterid+userid;
+            }
+            else
+            {
+                var roomid = userid+chatterid;
+            }
+
             var sendMessage = document.getElementById('sendMessage'); // Here your text input element
             sendMessage.addEventListener('keyup', function (event) {
                 if (event.keyCode === 13 && !event.shiftKey) {
                     // 13 is the number of Enter key on keyboard
-                    fetch('/chat/send', {
+                    if(sendMessage.value != '')
+                    {
+
+                        //append message to html
+                        
+                        appendMessage(true, sendMessage.value);
+
+                        //send webhook
+                        socket.emit('send-message', roomid, sendMessage.value);
+                        //update db
+                        fetch('/chat/send', {
                         method: 'POST',
                         body: JSON.stringify({
                             recipient:'<%=currentChatter._id%>',
@@ -62,12 +96,71 @@
                         headers: {
                             'Content-type': 'application/json; charset=UTF-8',
                         }
-                    });
-                    event.preventDefault();
-                    sendMessage.value = '';
-                    //you could get the id of a form and do form.submit();
+                        });
+                        event.preventDefault();
+                        sendMessage.value = '';
+                    }
                 }
             });
+
+            function appendMessage(youSent, message)
+            {   
+                const chatsEl = document.getElementById('chatView');
+                if(youSent)
+                {
+                    chatsEl.innerHTML += `
+                    <div class='you'>
+                        <p class="name bold">You</p>
+                        <p class="message">${sendMessage.value}</p>
+                    </div>
+                    `
+                }
+                else
+                {
+                    chatsEl.innerHTML += `
+                    <div>
+                        <p class="name bold"><%=currentChatter.username%></p>
+                        <p class="message">${sendMessage.value}</p>
+                    </div>
+                    `
+                }
+                scrollToBottom();
+            }
+
+            
+
+            function loadMore()
+            {
+                let limit = 50;
+                if (urlParams.get('limitMessages')) {
+                    limit = parseInt(urlParams.get('limitMessages'));
+                    limit += 25;
+                }
+                window.open(`/chat?user=${urlParams.get('user')}&limitMessages=${limit}`, '_self');
+            }
+
+            function scrollToBottom()
+            {
+                if(!urlParams.get('limitMessages'))
+                {
+                    let chatCon = document.getElementById("chatView");
+                    chatCon.scrollTop = chatCon.scrollHeight;
+                }
+            }
+            scrollToBottom();
+
+            
+            const socket = io('ws://localhost:3001');
+            socket.io.on("error", (error) => {
+                console.log(error);
+            })
+            
+
+            socket.emit('join-room', roomid);
+
+            socket.on('message', text=> {
+                appendMessage(false, text);
+            })
         </script>
     </body>
     <% } else {%>
