@@ -27,6 +27,12 @@ const accountSchema = new Schema(
             type: Number,
             required: true,
         },
+        skills: {
+            type: String,
+        },
+        completedOrders: {
+            type: Number,
+        },
         chats: [
             {
                 type: mongoose.Schema.Types.ObjectId,

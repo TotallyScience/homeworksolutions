@@ -37,7 +37,7 @@
                     <% if(order.open == true) { %>
                     <button
                         class="common-button"
-                        onclick="window.open('/orders/offers/<%=order.id%>','_self')"
+                        onclick="window.open('/offer/offers/<%=order.id%>','_self')"
                     >
                         See Offers
                     </button>
@@ -55,6 +55,9 @@
                         style="display: none"
                     >
                         <%=order.helperid.username%>
+                    </div>
+                    <div class="userid" style="display: none">
+                        <%=order.helperid._id%>
                     </div>
                     <div class="realdesc" style="display: none">
                         <%=order.instructions%>
@@ -127,20 +130,23 @@
                 <p class="header">Requirements</p>
                 <p class="norm" style="white-space: pre-line" id="popReqs"></p>
             </div>
-            <form action="/orders/offer" method="POST">
-                <div class="buttonCon">
-                    <button
-                        type="button"
-                        class="common-button alt"
-                        onclick="hideModel()"
-                    >
-                        Cancel
-                    </button>
-                    <button type="button" class="common-button" onclick="">
-                        Chat
-                    </button>
-                </div>
-            </form>
+            <div class="buttonCon">
+                <button
+                    type="button"
+                    class="common-button alt"
+                    onclick="hideModel()"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="popChatButton"
+                    type="button"
+                    class="common-button"
+                    onclick=""
+                >
+                    Chat
+                </button>
+            </div>
         </div>
     </body>
     <script>
@@ -154,6 +160,16 @@
             //document.getElementById('orderId').value = id;
             //console.log(document.getElementById(id));
             // console.log(id);
+            let userid = document
+                .getElementById(id)
+                .querySelector('.userid').innerHTML;
+            console.log(userid.trim());
+            document
+                .getElementById('popChatButton')
+                .setAttribute(
+                    'onclick',
+                    `window.open('/chat?user=${userid.trim()}', '_self')`
+                );
             document.getElementById('popUser').innerHTML = document
                 .getElementById(id)
                 .querySelector('.username').innerHTML;

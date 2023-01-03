@@ -2,7 +2,7 @@
 <html>
     <head>
         <%- include('includes/head.ejs') %>
-        <link rel="stylesheet" href="/styles/orders.css" />
+        <link rel="stylesheet" href="/styles/seeoffers.css" />
     </head>
     <body>
         <%- include('includes/navbar.ejs') %>
@@ -19,22 +19,46 @@
                 />
             </button>
         </div>
-        <div id="current">
+        <div id="helpers">
             <% if(offers.length > 0) { %> <% offers.forEach(offer => { %>
-            <div class="con" id="<%=offer.id%>">
+            <div class="helper" id="<%=offer.id%>">
                 <p class="username" style="display: none">
                     <%=offer.offererName%>
                 </p>
                 <p class="offerid" style="display: none"><%=offer.offerid%></p>
-                <p class="class" style="text-align: center">
-                    <%=offer.offererName.toUpperCase()%>
-                    <span style="font-weight: 100">⭐<%=offer.stars%></span>
-                </p>
-                <br />
-                <p class="class" id="amount">$<%=offer.amount%></p>
-                <div class="realdesc" style="display: none"></div>
+                <div class="top">
+                    <img
+                        class="profile"
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    />
+                    <div>
+                        <p class="name">
+                            <%=offer.offererName.toUpperCase()%><span
+                                class="review"
+                                >⭐<%=offer.stars%></span
+                            >
+                        </p>
 
-                <div class="buttonCon">
+                        <p class="reviews">
+                            (<%=offer.offererReviews%> reviews)
+                        </p>
+                    </div>
+                </div>
+                <div class="skills">
+                    <p class="title">Skills</p>
+                    <p class="list"><%=offer.offererSkills%></p>
+                </div>
+                <hr />
+                <div class="underbar">
+                    <p>Total orders</p>
+                    <p class="num"><%=offer.offererTotalOrders%></p>
+                </div>
+                <br />
+                <div class="underbar">
+                    <p>Offered price</p>
+                    <p class="num">$<%=offer.amount%></p>
+                </div>
+                <div class="options">
                     <button
                         class="common-button alt"
                         onclick="Decline('<%=offer.id%>', '<%=offer.orderid%>')"

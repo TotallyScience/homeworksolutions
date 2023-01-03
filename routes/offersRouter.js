@@ -126,7 +126,7 @@ router.get('/offers/:orderid', async (req, res) => {
                     path: 'offers',
                     populate: {
                         path: 'offererid',
-                        select: 'stars username',
+                        select: 'stars username reviews completedOrders skills',
                     },
                 })
                 .catch((err) => {
@@ -141,6 +141,10 @@ router.get('/offers/:orderid', async (req, res) => {
                     stars: order.offers[i].offererid.stars,
                     offererName: order.offers[i].offererid.username,
                     offererid: order.offers[i].offererid._id,
+                    offererReviews: order.offers[i].offererid.reviews,
+                    offererTotalOrders:
+                        order.offers[i].offererid.completedOrders,
+                    offererSkills: order.offers[i].offererid.skills,
                 });
             }
         });

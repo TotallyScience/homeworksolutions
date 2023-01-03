@@ -77,6 +77,10 @@
     text-decoration: none;
 }
 
+#rightbar img {
+    width: 22px;
+}
+
 #rightbar p {
     font-size: 17px;
     margin-left: 20px;
