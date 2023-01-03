@@ -81,10 +81,10 @@
                     {
 
                         //append message to html
-                        
                         appendMessage(true, sendMessage.value);
 
                         //send webhook
+                        console.log("Made");
                         socket.emit('send-message', roomid, sendMessage.value);
                         //update db
                         fetch('/chat/send', {
@@ -120,7 +120,7 @@
                     chatsEl.innerHTML += `
                     <div>
                         <p class="name bold"><%=currentChatter.username%></p>
-                        <p class="message">${sendMessage.value}</p>
+                        <p class="message">${message}</p>
                     </div>
                     `
                 }
@@ -150,7 +150,7 @@
             scrollToBottom();
 
             
-            const socket = io('ws://localhost:3001');
+            const socket = io();
             socket.io.on("error", (error) => {
                 console.log(error);
             })
@@ -159,6 +159,7 @@
             socket.emit('join-room', roomid);
 
             socket.on('message', text=> {
+                console.log(text);
                 appendMessage(false, text);
             })
         </script>

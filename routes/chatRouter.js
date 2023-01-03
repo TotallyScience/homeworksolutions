@@ -1,15 +1,8 @@
 const express = require('express');
-const app = express();
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const Account = require('../models/account');
 const Message = require('../models/message');
-
-const server = require('http').Server(app);
-
-const io = require('socket.io')(server);
-
-server.listen(3001);
 
 const { decodeToken, requireLogin } = require('../middleware/isLoggedIn.js');
 
@@ -170,18 +163,5 @@ router.get('/newchat', async (req, res) => {
 });
 
 function startSockets() {}
-
-io.on('connection', (socket) => {
-    console.log('here me yell');
-    socket.on('join-room', (room) => {
-        console.log('bam');
-        socket.join(room);
-    });
-    socket.on('send-message', (room, message) => {
-        console.log('test');
-        socket.to(room).broadcast.emit('message', message);
-        //message is sent do db in different function
-    });
-});
 
 module.exports = router;

@@ -13,13 +13,16 @@ const chatRouter = require('./routes/chatRouter');
 const { checkLogin } = require('./middleware/isLoggedIn.js');
 
 const app = express();
+const http = require('http').Server(app);
+
+require('./chatSocket.js').createSocket(http);
 
 //connect to mongodb
 const dbURI =
     'mongodb+srv://zach:Homeworksecure4321@homeworksolutions.f1vjlb4.mongodb.net/homeworksolutions?retryWrites=true&w=majority';
 mongoose
     .connect(dbURI)
-    .then((result) => app.listen(3000))
+    .then((result) => http.listen(3000))
     .catch((err) => console.log(err));
 
 app.set('view engine', 'ejs');
