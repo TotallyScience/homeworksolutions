@@ -7,6 +7,9 @@ const Account = require('../models/account');
 const Offer = require('../models/offer');
 const fs = require('fs');
 const archiver = require('archiver');
+const multer = require('multer');
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 const { decodeToken } = require('../middleware/isLoggedIn.js');
 
@@ -206,5 +209,55 @@ router.get('/downloadfiles/:orderid', async (req, res) => {
         res.redirect('/account/signup');
     }
 });
+
+router.post(
+    '/submitFiles',
+    upload.array('pdf'),
+    bodyParser.urlencoded({ extended: true }),
+    (req, res) => {
+        const { orderid } = req.body;
+        //const buffer = Buffer.from(file.buffer, 'binary');
+        //console.log(req.files);
+        const className = req.query.class;
+        let error = '';
+
+        if (req.files.length > 4) {
+            error = '*You can only upload up to 4 files';
+        } else if (req.files != null) {
+            let size = 0;
+            req.files.every((file) => {
+                if (
+                    !file.mimetype.startsWith('image/') &&
+                    !(file.mimetype == 'application/pdf')
+                ) {
+                    error = '*You can only upload Images or PDFs as a file';
+                    return false;
+                }
+                size += file.size;
+                return true;
+            });
+            if (size > 15000000) {
+                error = '*Max file upload size is 15 mb';
+            }
+        }
+        if (error != '') {
+            res.redirect(`/orders?submitError=${error}`);
+        } else {
+            let files = req.files.map((file) => file.buffer);
+            let fileTypes = req.files.map((file) => file.mimetype);
+            //let id = decodeToken(req.cookies.access_token).id;
+            console.log(orderid);
+            Order.updateOne(
+                { _id: orderid },
+                {
+                    submittedFiles: files,
+                    submittedFileTypes: fileTypes,
+                }
+            ).then(async (order) => {
+                res.redirect('/orders');
+            });
+        }
+    }
+);
 
 module.exports = router;

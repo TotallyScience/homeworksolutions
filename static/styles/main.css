@@ -46,6 +46,7 @@ p {
     border-radius: 15px;
     border: none;
     background-color: var(--accent-color);
+    border: 2px solid var(--accent-color);
     color: var(--light-color);
     font-size: 17px;
     cursor: pointer;

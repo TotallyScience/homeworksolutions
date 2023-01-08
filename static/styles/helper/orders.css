@@ -52,7 +52,7 @@ body {
 
 #current .con {
     width: 200px;
-    padding: 1%;
+    padding: 10px;
     border-radius: 15px;
     border: solid 2px var(--dark-color);
     display: flex;
@@ -210,4 +210,59 @@ body {
     left: -10px;
     z-index: 1;
     opacity: 0.7;
+}
+
+#workPopup {
+    width: 600px;
+    height: 300px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    position: fixed;
+    background-color: var(--light-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    border: solid 2px var(--dark-color);
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
+    z-index: 100;
+}
+
+#workPopup .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+#workPopup .user {
+    font-size: 1.3rem;
+}
+
+#workPopup .buttonCon {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+#workPopup .common-button {
+    padding: 1%;
+    width: 150px;
+    height: 20%;
+}
+
+#workPopup input {
+    margin-left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    font-size: 1.3rem;
+    padding: 7px 0;
+    background: transparent;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }

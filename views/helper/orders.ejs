@@ -18,8 +18,8 @@
             <% } %>
         </div>
         <div id="current">
-            <% if(acceptedOrders.length > 0) { acceptedOrders.forEach(order => {
-            %>
+            <% if(acceptedOrders.length > 0) { acceptedOrders.forEach(order =>
+            {console.log(order.submittedFiles.length);%>
             <div class="con" id="<%=order.id%>">
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
@@ -31,6 +31,9 @@
                 <p class="date">Due date: <%=order.deadline%></p>
                 <div class="userid" style="display: none">
                     <%=order.userid._id%>
+                </div>
+                <div class="submittedFilesLen" style="display: none">
+                    <%=order.submittedFiles.length%>
                 </div>
                 <p class="username" style="display: none">
                     <%=order.userid.username%>
@@ -176,6 +179,14 @@
                     Cancel
                 </button>
                 <button
+                    id="popSubmitButton"
+                    type="button"
+                    class="common-button"
+                    onclick=""
+                >
+                    Submit Work
+                </button>
+                <button
                     id="popChatButton"
                     type="button"
                     class="common-button"
@@ -185,9 +196,45 @@
                 </button>
             </div>
         </div>
+
+        <div id="workPopup" style="display: none; padding-bottom: 15px">
+            <form
+                action="/orders/submitFiles"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+                <p class="title" name="test" id="popClass">Submit work</p>
+                <p>
+                    Client
+                    <span class="bold" id="submitPopUser"></span>
+                </p>
+                <hr />
+                <input type="file" name="pdf" multiple />
+                <input id="submitOrderid" name="orderid" type="hidden" />
+                <div class="buttonCon">
+                    <button
+                        id="submitCancelB"
+                        type="button"
+                        class="common-button alt"
+                        onclick="hideSubmitModel()"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        id=""
+                        type="submit"
+                        class="common-button"
+                        onclick=""
+                    >
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
     </body>
     <script>
         function showRequestModel(id) {
+            hideSubmitModel();
             document.getElementById('requestPopup').style.display = '';
             document.getElementById('reqOrderId').value = id;
             document.getElementById('reqPopUser').innerHTML = document
@@ -217,6 +264,7 @@
         }
 
         function showModel(id) {
+            hideSubmitModel();
             //console.log(id);
             document.getElementById('popup').style.display = '';
             //document.getElementById('orderId').value = id;
@@ -232,6 +280,9 @@
                     'onclick',
                     `window.open('/chat?user=${userid.trim()}', '_self')`
                 );
+            document
+                .getElementById('popSubmitButton')
+                .setAttribute('onclick', `showSubmitModel('${id}')`);
             console.log(
                 document
                     .getElementById(id)
@@ -267,6 +318,30 @@
 
         function hideModel() {
             document.getElementById('popup').style.display = 'none';
+        }
+
+        function showSubmitModel(id) {
+            if (
+                document.getElementById(id).querySelector('.submittedFilesLen')
+                    .innerHTML > 0
+            ) {
+                confirm(
+                    'You have already submitted files to this order. Submitting new files will clear the old ones.'
+                );
+            }
+            hideModel();
+            document.getElementById('workPopup').style.display = '';
+            document.getElementById('submitPopUser').innerHTML = document
+                .getElementById(id)
+                .querySelector('.username').innerHTML;
+            document
+                .getElementById('submitCancelB')
+                .setAttribute('onclick', `showModel('${id}')`);
+            document.getElementById('submitOrderid').value = id;
+        }
+
+        function hideSubmitModel(id) {
+            document.getElementById('workPopup').style.display = 'none';
         }
 
         const queryString = window.location.search;
