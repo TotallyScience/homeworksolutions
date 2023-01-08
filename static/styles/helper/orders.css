@@ -1,0 +1,213 @@
+body {
+    margin-left: 150px;
+}
+
+#heading {
+    display: flex;
+}
+
+#heading .h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#heading .past {
+    font-size: 1rem;
+    color: var(--accent-color);
+    font-weight: normal;
+    cursor: pointer;
+}
+
+#heading .h2 {
+    margin-top: 10px;
+    font-size: 1.6rem;
+    margin-left: 100px;
+}
+
+#heading .h2 a {
+    font-size: 1rem;
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+#heading button {
+    margin-top: 4px;
+    margin-left: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+#heading button img {
+    width: 25px;
+}
+
+#current {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+#current .con {
+    width: 200px;
+    padding: 1%;
+    border-radius: 15px;
+    border: solid 2px var(--dark-color);
+    display: flex;
+    flex-direction: column;
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
+}
+
+#current .con .buttonCon {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#current .con .buttonCon button {
+    width: 150px;
+    padding: 2%;
+}
+
+#current .con .buttonCon p {
+    background-color: var(--accent-color);
+    border: 1.5px solid rgb(0, 0, 0);
+    padding: 2%;
+    width: 15px;
+    border-radius: 15px;
+    position: absolute;
+    top: 0;
+    margin-left: 150px;
+    color: var(--light-color);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#current .class {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+#current .desc {
+    margin-top: 15px;
+    font-size: 1.2rem;
+}
+
+#current .realdesc {
+    margin-top: -15px;
+    font-size: 1.2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 115px;
+}
+
+#current .date {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#current button {
+    margin-top: 15px;
+}
+
+#popup {
+    width: 40vw;
+    height: 700px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    position: fixed;
+    background-color: var(--light-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    border: solid 2px var(--dark-color);
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
+    z-index: 100;
+}
+
+#popup .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+#popup .user {
+    font-size: 1.3rem;
+}
+
+#popup a {
+    color: var(--accent-color);
+}
+
+#popup .details {
+    margin-top: 30px;
+    font-size: 1.2rem;
+}
+
+#popup .requirements {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    height: 420px;
+}
+
+#popup .requirements .header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#popup .requirements .norm {
+    font-size: 1.2rem;
+    margin-left: 10px;
+    overflow-y: auto;
+    max-height: 375px;
+}
+
+#popup .buttonCon {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+#popup .common-button {
+    padding: 1%;
+    width: 150px;
+}
+
+#popup input {
+    cursor: pointer;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    font-size: 1rem;
+    width: 150px;
+    background: transparent;
+    position: relative;
+}
+
+#popup .numDiv {
+    position: relative;
+}
+
+#popup .numDiv:before {
+    content: '$';
+    position: absolute;
+    left: -10px;
+    z-index: 1;
+    opacity: 0.7;
+}

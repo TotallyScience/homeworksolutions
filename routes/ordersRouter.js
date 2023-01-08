@@ -84,6 +84,15 @@ router.get('/', async (req, res) => {
                 helperid: id,
                 completed: false,
             });
+
+            for (let i = 0; i < acceptedOrders.length; i++) {
+                acceptedOrders[i] = await acceptedOrders[i]
+                    .populate('userid')
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+
             res.render('helper/orders', {
                 orders: acceptedOrderDetails,
                 acceptedOrders: acceptedOrders,
@@ -187,7 +196,6 @@ router.get('/downloadfiles/:orderid', async (req, res) => {
 
                 for (let i = 0; i < files.length; i++) {
                     let extension = order.fileTypes[i].split('/')[1];
-                    console.log(extension);
                     zip.append(files[i], {
                         name: `file-${Date.now()}.${extension}`,
                     });

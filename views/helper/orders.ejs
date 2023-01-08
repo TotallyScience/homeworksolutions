@@ -2,7 +2,7 @@
 <html>
     <head>
         <%- include('../includes/head.ejs') %>
-        <link rel="stylesheet" href="/styles/orders.css" />
+        <link rel="stylesheet" href="/styles/helper/orders.css" />
     </head>
 
     <body>
@@ -20,7 +20,7 @@
         <div id="current">
             <% if(acceptedOrders.length > 0) { acceptedOrders.forEach(order => {
             %>
-            <div class="con">
+            <div class="con" id="<%=order.id%>">
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
@@ -29,10 +29,25 @@
                     &emsp;-<%=order.spacing%> spaced <br />
                 </p>
                 <p class="date">Due date: <%=order.deadline%></p>
+                <div class="userid" style="display: none">
+                    <%=order.userid._id%>
+                </div>
+                <p class="username" style="display: none">
+                    <%=order.userid.username%>
+                </p>
+                <p class="files" style="display: none">
+                    <%=order.files.length%>
+                </p>
+                <div
+                    class="realdesc"
+                    style="display: none; white-space: pre-line"
+                >
+                    <%=order.instructions%>
+                </div>
                 <div class="buttonCon">
                     <button
                         class="common-button alt"
-                        onclick="window.open('/orders/activeorder/<%=order._id%>', '_self')"
+                        onclick="showModel('<%=order.id%>')"
                     >
                         Details
                     </button>
@@ -78,7 +93,7 @@
                 <div class="buttonCon">
                     <button
                         class="common-button alt"
-                        onclick="showModel('<%=order.id%>')"
+                        onclick="showRequestModel('<%=order.id%>')"
                     >
                         Details
                     </button>
@@ -86,18 +101,22 @@
             </div>
             <% }); %> <% }; %>
         </div>
-        <div id="popup" style="display: none">
-            <p id="title"></p>
-            <p class="user">Requested by <span id="popUser"></span></p>
+        <div id="requestPopup" style="display: none">
+            <p id="reqTitle"></p>
+            <p class="user">Requested by <span id="reqPopUser"></span></p>
             <hr />
-            <div class="details" id="popDetails"></div>
-            <div id="download">
+            <div class="details" id="reqPopDetails"></div>
+            <div id="reqDownload">
                 <br />
-                <a id="fileslink" href="">Download Files</a>
+                <a id="reqFileslink" href="">Download Files</a>
             </div>
             <div class="requirements">
                 <p class="header">Requirements</p>
-                <p class="norm" style="white-space: pre-line" id="popReqs"></p>
+                <p
+                    class="norm"
+                    style="white-space: pre-line"
+                    id="reqPopReqs"
+                ></p>
             </div>
             <form action="/offer" method="POST">
                 <div class="buttonCon">
@@ -109,11 +128,15 @@
                         Cancel
                     </button>
 
-                    <input style="display: none" name="orderId" id="orderId" />
+                    <input
+                        style="display: none"
+                        name="orderId"
+                        id="reqOrderId"
+                    />
                     <div class="numDiv">
                         <input
                             type="number"
-                            id="offerAmount"
+                            id="reqOfferAmount"
                             placeholder="0.00"
                             name="amount"
                         />
@@ -122,14 +145,106 @@
                 </div>
             </form>
         </div>
+
+        <div id="popup" style="display: none; padding-bottom: 15px">
+            <p class="title" id="popClass"></p>
+            <p>
+                Requested by
+                <span class="bold" id="popUser"></span>
+            </p>
+            <hr />
+            <div id="popDetails">
+                <br />
+                &emsp;-<br />
+                pages<br />
+                &emsp;- spaced <br />
+            </div>
+            <div id="download">
+                <br />
+                <a id="fileslink" href="">Download Files</a>
+            </div>
+            <div class="requirements">
+                <p class="header">Requirements</p>
+                <p class="norm" style="white-space: pre-line" id="popReqs"></p>
+            </div>
+            <div class="buttonCon">
+                <button
+                    type="button"
+                    class="common-button alt"
+                    onclick="hideModel()"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="popChatButton"
+                    type="button"
+                    class="common-button"
+                    onclick=""
+                >
+                    Chat
+                </button>
+            </div>
+        </div>
     </body>
     <script>
-        function showModel(id) {
-            document.getElementById('popup').style.display = '';
-            document.getElementById('orderId').value = id;
-            document.getElementById('popUser').innerHTML = document
+        function showRequestModel(id) {
+            document.getElementById('requestPopup').style.display = '';
+            document.getElementById('reqOrderId').value = id;
+            document.getElementById('reqPopUser').innerHTML = document
                 .getElementById(id)
                 .querySelector('.username').innerHTML;
+            if (
+                document.getElementById(id).querySelector('.files').innerHTML >
+                0
+            ) {
+                document.getElementById('reqDownload').style.display = '';
+                document
+                    .getElementById('reqFileslink')
+                    .setAttribute('href', `/orders/downloadfiles/${id}`);
+            } else {
+                document.getElementById('reqDownload').style.display = 'none';
+            }
+            document.getElementById('reqPopReqs').innerHTML = document
+                .getElementById(id)
+                .querySelector('.realdesc').innerHTML;
+            document.getElementById('reqPopDetails').innerHTML = document
+                .getElementById(id)
+                .querySelector('.desc').innerHTML;
+            document.getElementById('reqTitle').innerHTML = document
+                .getElementById(id)
+                .querySelector('.class').innerHTML;
+            document.getElementById('reqOfferAmount').value = '';
+        }
+
+        function showModel(id) {
+            //console.log(id);
+            document.getElementById('popup').style.display = '';
+            //document.getElementById('orderId').value = id;
+            //console.log(document.getElementById(id));
+            // console.log(id);
+            console.log(document.getElementById(id));
+            let userid = document
+                .getElementById(id)
+                .querySelector('.userid').innerHTML;
+            document
+                .getElementById('popChatButton')
+                .setAttribute(
+                    'onclick',
+                    `window.open('/chat?user=${userid.trim()}', '_self')`
+                );
+            console.log(
+                document
+                    .getElementById(id)
+                    .querySelector('.username')
+                    .innerHTML.trim()
+            );
+            document.getElementById('popUser').innerHTML = document
+                .getElementById(id)
+                .querySelector('.username')
+                .innerHTML.trim();
+            document.getElementById('popClass').innerHTML = document
+                .getElementById(id)
+                .querySelector('.class').innerHTML;
             if (
                 document.getElementById(id).querySelector('.files').innerHTML >
                 0
@@ -141,17 +256,15 @@
             } else {
                 document.getElementById('download').style.display = 'none';
             }
+            console.log(document.getElementById(id).querySelector('.realdesc'));
             document.getElementById('popReqs').innerHTML = document
                 .getElementById(id)
                 .querySelector('.realdesc').innerHTML;
             document.getElementById('popDetails').innerHTML = document
                 .getElementById(id)
                 .querySelector('.desc').innerHTML;
-            document.getElementById('title').innerHTML = document
-                .getElementById(id)
-                .querySelector('.class').innerHTML;
-            document.getElementById('offerAmount').value = '';
         }
+
         function hideModel() {
             document.getElementById('popup').style.display = 'none';
         }
