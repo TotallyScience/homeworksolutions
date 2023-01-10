@@ -1,5 +1,5 @@
-function createSocket(httpServer) {
-    const io = require('socket.io')(httpServer);
+function createSocket(io) {
+    //const io = require('socket.io')(httpServer);
 
     io.on('connection', (socket) => {
         socket.on('join-room', (room) => {

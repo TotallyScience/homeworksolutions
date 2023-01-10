@@ -39,7 +39,6 @@ router.get('/', requireLogin, async (req, res) => {
     chatters = chatters.chats;
 
     if (chatters.length > 0) {
-        startSockets();
         let chatter;
         if (!req.query.user) {
             //there is no user parameter or there is one but you do not have a chat with it
@@ -131,7 +130,7 @@ router.post('/send', bodyParser.json(), async (req, res) => {
     messsage.save().catch((err) => {
         console.log(err);
     });
-    res.redirect(`/chat?user=${id}`);
+    //res.redirect(`/chat?user=${id}`);
 });
 
 router.get('/newchat', async (req, res) => {
@@ -161,7 +160,5 @@ router.get('/newchat', async (req, res) => {
 
     res.redirect(`/chat?user=${recipient}`);
 });
-
-function startSockets() {}
 
 module.exports = router;

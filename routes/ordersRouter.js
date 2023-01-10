@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const Order = require('../models/order');
 const Account = require('../models/account');
+const Message = require('../models/message');
 const Offer = require('../models/offer');
 const fs = require('fs');
 const archiver = require('archiver');
@@ -210,12 +211,45 @@ router.get('/downloadfiles/:orderid', async (req, res) => {
     }
 });
 
+router.get('/downloadfiles/submitted/:orderid', async (req, res) => {
+    if (res.locals.isLoggedIn) {
+        const id = decodeToken(req.cookies.access_token).id;
+        let orderid = req.params.orderid;
+
+        await Order.findOne({ _id: orderid })
+            .select('submittedFiles submittedFileTypes userid')
+            .then(async (order) => {
+                //console.log(order.files);
+
+                const userid = order.userid;
+
+                const files = order.submittedFiles;
+
+                const zip = archiver('zip');
+
+                res.attachment('files.zip');
+                zip.pipe(res);
+
+                for (let i = 0; i < files.length; i++) {
+                    let extension = order.submittedFileTypes[i].split('/')[1];
+                    zip.append(files[i], {
+                        name: `file-${Date.now()}.${extension}`,
+                    });
+                }
+                zip.finalize();
+            });
+    } else {
+        res.redirect('/account/signup');
+    }
+});
+
 router.post(
     '/submitFiles',
     upload.array('pdf'),
     bodyParser.urlencoded({ extended: true }),
     (req, res) => {
-        const { orderid } = req.body;
+        const id = decodeToken(req.cookies.access_token).id;
+        const { orderid, userid } = req.body;
         //const buffer = Buffer.from(file.buffer, 'binary');
         //console.log(req.files);
         const className = req.query.class;
@@ -254,6 +288,24 @@ router.post(
                     submittedFileTypes: fileTypes,
                 }
             ).then(async (order) => {
+                //send message to the chat
+                console.log(userid.trim());
+                if (id.localeCompare(userid) >= 1) {
+                    var room = id + userid;
+                } else {
+                    var room = userid + id;
+                }
+                console.log(room);
+                await req.io.to(room).emit('message', `/SERVER/${orderid}`);
+
+                const messsage = new Message({
+                    recipient: userid,
+                    sender: id,
+                    message: `/SERVER/${orderid}`,
+                });
+                await messsage.save().catch((err) => {
+                    console.log(err);
+                });
                 res.redirect('/orders');
             });
         }

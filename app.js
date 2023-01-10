@@ -16,7 +16,13 @@ const { checkLogin } = require('./middleware/isLoggedIn.js');
 const app = express();
 const http = require('http').Server(app);
 
-require('./chatSocket.js').createSocket(http);
+const io = require('socket.io')(http);
+require('./chatSocket.js').createSocket(io);
+
+app.use(function (req, res, next) {
+    req.io = io;
+    next();
+});
 
 //connect to mongodb
 const dbURI =

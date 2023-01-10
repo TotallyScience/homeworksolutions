@@ -132,6 +132,10 @@
     background-color: rgba(0, 225, 0, 0.2);
 }
 
+#chatCon .chatView div.server {
+    background-color: rgba(234, 255, 0, 0.2);
+}
+
 #chatCon .writeChat {
     border: 0;
     display: flex;

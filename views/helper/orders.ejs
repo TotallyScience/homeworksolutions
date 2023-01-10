@@ -199,6 +199,7 @@
 
         <div id="workPopup" style="display: none; padding-bottom: 15px">
             <form
+                id="submitWorkForm"
                 action="/orders/submitFiles"
                 method="POST"
                 enctype="multipart/form-data"
@@ -209,8 +210,17 @@
                     <span class="bold" id="submitPopUser"></span>
                 </p>
                 <hr />
+                <div class="download" style="">
+                    <p>
+                        You have already submitted files to this order.
+                        Submitting new ones will clear the old ones.
+                    </p>
+                    <br />
+                    <a id="fileslink" href="">Download Submitted Files</a>
+                </div>
                 <input type="file" name="pdf" multiple />
                 <input id="submitOrderid" name="orderid" type="hidden" />
+                <input id="submitUserid" name="userid" type="hidden" />
                 <div class="buttonCon">
                     <button
                         id="submitCancelB"
@@ -321,14 +331,6 @@
         }
 
         function showSubmitModel(id) {
-            if (
-                document.getElementById(id).querySelector('.submittedFilesLen')
-                    .innerHTML > 0
-            ) {
-                confirm(
-                    'You have already submitted files to this order. Submitting new files will clear the old ones.'
-                );
-            }
             hideModel();
             document.getElementById('workPopup').style.display = '';
             document.getElementById('submitPopUser').innerHTML = document
@@ -338,6 +340,29 @@
                 .getElementById('submitCancelB')
                 .setAttribute('onclick', `showModel('${id}')`);
             document.getElementById('submitOrderid').value = id;
+            document.getElementById('submitUserid').value = document
+                .getElementById(id)
+                .querySelector('.userid')
+                .innerHTML.trim();
+            document
+                .getElementById('workPopup')
+                .querySelector('.download').style.display = 'none';
+            if (
+                document.getElementById(id).querySelector('.submittedFilesLen')
+                    .innerHTML > 0
+            ) {
+                document
+                    .getElementById('workPopup')
+                    .querySelector('.download').style.display = '';
+                document
+                    .getElementById('workPopup')
+                    .querySelector('.download')
+                    .querySelector('a')
+                    .setAttribute(
+                        'href',
+                        `/orders/downloadfiles/submitted/${id}`
+                    );
+            }
         }
 
         function hideSubmitModel(id) {
@@ -350,5 +375,35 @@
             showModel(urlParams.get('id'));
             alert('You must offer a valid amount');
         }
+
+        // Get the form element
+        // const form = document.getElementById('submitWorkForm');
+        // const formData = new FormData(form);
+        // console.log(formData);
+        // Add a submit event listener to the form
+        // form.addEventListener('submit', (e) => {
+        //     // Prevent the default submit behavior
+        //     e.preventDefault();
+
+        //     // Get the form data
+
+        //     const formData = new FormData(form);
+        //     console.log()
+
+        //     // Send a POST request to the server
+        //     // fetch('/orders/submitFiles', {
+        //     //     method: 'POST',
+        //     //     body: formData,
+        //     //     headers: {
+        //     //         'Content-Type':
+        //     //             'multipart/form-data; boundary="my-boundary-string"',
+        //     //     },
+        //     // })
+        //     //     .then((response) => response.json())
+        //     //     .then((data) => {
+        //     //         // The data returned from the server is available here
+        //     //         console.log(data);
+        //     //     });
+        // });
     </script>
 </html>
