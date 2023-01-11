@@ -274,3 +274,95 @@ body {
 #workPopup .download p {
     color: red;
 }
+
+#requestPopup {
+    width: 40vw;
+    min-height: 700px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    position: fixed;
+    background-color: var(--light-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    border: solid 2px var(--dark-color);
+    -moz-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
+    box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
+    z-index: 100;
+}
+
+#requestPopup .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+#requestPopup .user {
+    font-size: 1.3rem;
+}
+
+#requestPopup a {
+    color: var(--accent-color);
+}
+
+#requestPopup .details {
+    margin-top: 30px;
+    font-size: 1.2rem;
+}
+
+#requestPopup .requirements {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    height: 420px;
+}
+
+#requestPopup .requirements .header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#requestPopup .requirements .norm {
+    font-size: 1.2rem;
+    margin-left: 10px;
+    overflow-y: auto;
+    max-height: 375px;
+}
+
+#requestPopup .buttonCon {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+#requestPopup .common-button {
+    padding: 1%;
+    width: 150px;
+}
+
+#requestPopup input {
+    cursor: pointer;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    font-size: 1rem;
+    width: 150px;
+    background: transparent;
+    position: relative;
+}
+
+#requestPopup .numDiv {
+    position: relative;
+}
+
+#requestPopup .numDiv:before {
+    content: '$';
+    position: absolute;
+    left: -10px;
+    z-index: 1;
+    opacity: 0.7;
+}

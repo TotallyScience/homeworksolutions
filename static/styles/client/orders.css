@@ -51,7 +51,8 @@ body {
 }
 
 #current .con {
-    width: 200px;
+    position: relative;
+    min-width: 200px;
     padding: 1%;
     border-radius: 15px;
     border: solid 2px var(--dark-color);
@@ -117,13 +118,20 @@ body {
     font-weight: bold;
 }
 
+#current .submittedWarning {
+    position: absolute;
+    width: 30px;
+    top: 5%;
+    left: 85%;
+}
+
 #current button {
     margin-top: 15px;
 }
 
 #popup {
     width: 40vw;
-    height: 700px;
+    min-height: 700px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -210,4 +218,11 @@ body {
     left: -10px;
     z-index: 1;
     opacity: 0.7;
+}
+
+#popup #completeDownload {
+    margin-top: 15px;
+}
+#popup #completeDownload p {
+    margin-top: 15px;
 }

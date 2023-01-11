@@ -105,7 +105,7 @@
             <% }); %> <% }; %>
         </div>
         <div id="requestPopup" style="display: none">
-            <p id="reqTitle"></p>
+            <p id="reqTitle" class="title"></p>
             <p class="user">Requested by <span id="reqPopUser"></span></p>
             <hr />
             <div class="details" id="reqPopDetails"></div>
@@ -226,7 +226,7 @@
                         id="submitCancelB"
                         type="button"
                         class="common-button alt"
-                        onclick="hideSubmitModel()"
+                        onclick="hideModel()"
                     >
                         Cancel
                     </button>
@@ -244,7 +244,7 @@
     </body>
     <script>
         function showRequestModel(id) {
-            hideSubmitModel();
+            hideModel();
             document.getElementById('requestPopup').style.display = '';
             document.getElementById('reqOrderId').value = id;
             document.getElementById('reqPopUser').innerHTML = document
@@ -274,7 +274,7 @@
         }
 
         function showModel(id) {
-            hideSubmitModel();
+            hideModel();
             //console.log(id);
             document.getElementById('popup').style.display = '';
             //document.getElementById('orderId').value = id;
@@ -328,6 +328,8 @@
 
         function hideModel() {
             document.getElementById('popup').style.display = 'none';
+            document.getElementById('requestPopup').style.display = 'none';
+            document.getElementById('workPopup').style.display = 'none';
         }
 
         function showSubmitModel(id) {
@@ -363,10 +365,6 @@
                         `/orders/downloadfiles/submitted/${id}`
                     );
             }
-        }
-
-        function hideSubmitModel(id) {
-            document.getElementById('workPopup').style.display = 'none';
         }
 
         const queryString = window.location.search;

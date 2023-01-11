@@ -19,10 +19,14 @@
             <% } %>
         </div>
         <div id="current">
-            <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
+            <% if(orders.length > 0) { %> <% orders.forEach(order => {
+            console.log(order.submittedFiles.length) %>
             <div class="con" id="<%=order.id%>">
                 <p class="files" style="display: none">
                     <%=order.files.length%>
+                </p>
+                <p class="submittedfiles" style="display: none">
+                    <%=order.submittedFiles.length%>
                 </p>
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
@@ -31,6 +35,9 @@
                     <%=order.size%> pages<br />
                     &emsp;-<%=order.spacing%> spaced <br />
                 </p>
+                <%if(order.submittedFiles.length > 0){%>
+                <img class="submittedWarning" src="/images/icons/file.png"></img>
+                <%}%>
                 <p class="date">Due date: <%=order.deadline%></p>
 
                 <div class="buttonCon">
@@ -124,7 +131,11 @@
             </div>
             <div id="download">
                 <br />
-                <a id="fileslink" href="">Download Files</a>
+                <a id="fileslink" href="">Download Your Files</a>
+            </div>
+            <div id="completeDownload">
+                <p class="bold">Your helper has submitted files</p>
+                <a id="completedfileslink" href="">Download Completed Files</a>
             </div>
             <div class="requirements">
                 <p class="header">Requirements</p>
@@ -189,6 +200,21 @@
                     .setAttribute('href', `/orders/downloadfiles/${id}`);
             } else {
                 document.getElementById('download').style.display = 'none';
+            }
+            if (
+                document.getElementById(id).querySelector('.submittedfiles')
+                    .innerHTML > 0
+            ) {
+                document.getElementById('completeDownload').style.display = '';
+                document
+                    .getElementById('completedfileslink')
+                    .setAttribute(
+                        'href',
+                        `/orders/downloadfiles/submitted/${id}`
+                    );
+            } else {
+                document.getElementById('completeDownload').style.display =
+                    'none';
             }
             document.getElementById('popReqs').innerHTML = document
                 .getElementById(id)
