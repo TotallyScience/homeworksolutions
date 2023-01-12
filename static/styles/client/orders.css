@@ -159,6 +159,14 @@ body {
     justify-content: space-between;
 }
 
+#popup .topbar .completeCon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px;
+}
+
 #popup .user {
     font-size: 1.3rem;
 }

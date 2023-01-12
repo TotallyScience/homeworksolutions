@@ -27,6 +27,9 @@
                 <p class="submittedfiles" style="display: none">
                     <%=order.submittedFiles.length%>
                 </p>
+                <p class="helperCompletedDate" style="display: none">
+                    <%=order.helperCompletedDate%>
+                </p>
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
@@ -122,7 +125,10 @@
                     id="popRating"
                     ></span>
                 </p>
-                <a id="popupMarkComplete" style="text-decoration:underline; cursor:pointer">Mark as completed</a>
+                <div class="completeCon">
+                    <a id="popupMarkComplete" style="text-decoration:underline; cursor:pointer">Mark as completed</a>
+                    <a id="popupMarkIncomplete" style="display: none; text-decoration:underline; cursor:pointer; color:red;">Reject complete request</a>
+                </div>
             </div>
             <hr />
             <div id="popDetails">
@@ -192,6 +198,9 @@
             document.getElementById('popClass').innerHTML = document
                 .getElementById(id)
                 .querySelector('.class').innerHTML;
+            document.getElementById('popDetails').innerHTML = document
+                .getElementById(id)
+                .querySelector('.desc').innerHTML;
             if (
                 document.getElementById(id).querySelector('.files').innerHTML >
                 0
@@ -222,9 +231,15 @@
                 .getElementById(id)
                 .querySelector('.realdesc').innerHTML;
             document.getElementById('popupMarkComplete').setAttribute('onclick', `completeAssignment('${id}')`);
-            document.getElementById('popDetails').innerHTML = document
-                .getElementById(id)
-                .querySelector('.desc').innerHTML;
+            if(document
+                    .getElementById(id)
+                    .querySelector('.helperCompletedDate')
+                    .innerHTML.trim() != '')
+            {
+                document.getElementById('popupMarkIncomplete').setAttribute('onclick', `markIncomplete('${id}')`);
+                document.getElementById('popupMarkIncomplete').style.display = '';
+            }
+            
         }
 
         function completeAssignment(id)
@@ -232,6 +247,12 @@
             if(confirm("Are you sure you want to mark this as complete? You cannot undo this."))
             {
                 window.open(`/orders/completeOrder/${id}`, '_self');
+            }
+        }
+
+        function markIncomplete(id) {
+            if (confirm('Are you sure you want to mark this as incomplete?')) {
+                window.open(`/orders/completeOrder/cancel/${id}`, '_self');
             }
         }
     </script>
