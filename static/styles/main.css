@@ -69,3 +69,7 @@ p {
 .bold {
     font-weight: bold;
 }
+
+.negativeHover:hover {
+    color: red;
+}

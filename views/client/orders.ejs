@@ -19,8 +19,7 @@
             <% } %>
         </div>
         <div id="current">
-            <% if(orders.length > 0) { %> <% orders.forEach(order => {
-            console.log(order.submittedFiles.length) %>
+            <% if(orders.length > 0) { %> <% orders.forEach(order => {%>
             <div class="con" id="<%=order.id%>">
                 <p class="files" style="display: none">
                     <%=order.files.length%>
@@ -116,12 +115,15 @@
         </div>
         <div id="popup" style="display: none; padding-bottom: 15px">
             <p class="title" id="popClass"></p>
-            <p>
+            <div class="topbar">
+                <p>
                 Your order is being completed by
-                <span class="bold" id="popUser"></span>⭐<span
+                    <span class="bold" id="popUser"></span>⭐<span
                     id="popRating"
-                ></span>
-            </p>
+                    ></span>
+                </p>
+                <a id="popupMarkComplete" style="text-decoration:underline; cursor:pointer">Mark as completed</a>
+            </div>
             <hr />
             <div id="popDetails">
                 <br />
@@ -219,9 +221,18 @@
             document.getElementById('popReqs').innerHTML = document
                 .getElementById(id)
                 .querySelector('.realdesc').innerHTML;
+            document.getElementById('popupMarkComplete').setAttribute('onclick', `completeAssignment('${id}')`);
             document.getElementById('popDetails').innerHTML = document
                 .getElementById(id)
                 .querySelector('.desc').innerHTML;
+        }
+
+        function completeAssignment(id)
+        {
+            if(confirm("Are you sure you want to mark this as complete? You cannot undo this."))
+            {
+                window.open(`/orders/completeOrder/${id}`, '_self');
+            }
         }
     </script>
 </html>

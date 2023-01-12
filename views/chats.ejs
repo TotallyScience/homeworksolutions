@@ -41,10 +41,25 @@
                         </div>
                         <% } %>
                     <% chats.forEach(chat => { %>
-                        <%if(chat.message.includes('/SERVER/')){%>
+                        <%if(chat.message.includes('/SERVER/CLIENTCOMPLETE/')){%>
+                            <div class='server'>
+                                <p class="name bold">SERVER</p>
+                                <p class="message">Order #<%=chat.message.replace("/SERVER/CLIENTCOMPLETE/", "")%> has been marked as complete. Thank you for using Homework Solutions. Please leave a rating for the client...</p>
+                            </div>
+                        <%} else if (chat.message.includes('/SERVER/CANCELCOMPLETE/')){ %>
+                            <div class='server'>
+                                <p class="name bold">SERVER</p>
+                                <p class="message">Order #<%=chat.message.replace("/SERVER/CANCELCOMPLETE/", "")%> has been marked as incomplete.</p>
+                            </div>
+                        <%} else if (chat.message.includes('/SERVER/HELPERCOMPLETE/')){ %>
+                            <div class='server'>
+                                <p class="name bold">SERVER</p>
+                                <p class="message">The helper marked Order #<%=chat.message.replace("/SERVER/HELPERCOMPLETE/", "")%> as complete. If you feel the order is not complete, click <a href='/orders/completeOrder/cancel/<%=chat.message.replace("/SERVER/HELPERCOMPLETE/", "")%>' style="color:red" >here</a> to cancel the request. After 48 hours of no response it will automatically be set to complete.</a></p>
+                            </div>
+                        <%} else if (chat.message.includes('/SERVER/')){ %>
                         <div class='server'>
                             <p class="name bold">SERVER</p>
-                            <p class="message">Files have been submited and are now downloadable <a href='/orders/downloadfiles/submitted/<%=chat.message.replace("/SERVER/", "")%>'>here.</a></p>
+                            <p class="message">Files for Order #<%=chat.message.replace("/SERVER/", "")%> have been submited and are now downloadable <a href='/orders/downloadfiles/submitted/<%=chat.message.replace("/SERVER/", "")%>'>here.</a></p>
                         </div>
                         <%} else { %>
                         <div <%if(chat.sender == 'You'){%>class='you'<%}%>>
@@ -111,16 +126,46 @@
             function appendMessage(youSent, message)
             {   
                 const chatsEl = document.getElementById('chatView');
-                if(message.includes('/SERVER/'))
+                if(message.includes('/SERVER/CLIENTCOMPLETE/'))
+                {
+                    message = message.replace("/SERVER/CLIENTCOMPLETE/", "")
+                    chatsEl.innerHTML += `
+                    <div class='server'>
+                        <p class="name bold">SERVER</p>
+                        <p class="message">Order #${message} has been marked as complete. Thank you for using Homework Solutions. Please leave a rating for the client...</p>
+                    </div>
+                    `
+                }
+                else if(message.includes('/SERVER/CANCELCOMPLETE/'))
+                {
+                    message = message.replace("/SERVER/CANCELCOMPLETE/", "")
+                    chatsEl.innerHTML += `
+                    <div class='server'>
+                        <p class="name bold">SERVER</p>
+                        <p class="message">Order #${message} has been marked as incomplete.</p>
+                    </div>
+                    `
+                }
+                else if(message.includes('/SERVER/HELPERCOMPLETE/'))
+                {
+                    message = message.replace("/SERVER/HELPERCOMPLETE/", "")
+                    chatsEl.innerHTML += `
+                    <div class='server'>
+                        <p class="name bold">SERVER</p>
+                        <p class="message">The helper marked Order #${message} as complete. If you feel the order is not complete, click <a href='/orders/completeOrder/cancel/${message}' style="color:red" >here</a> to cancel the request. After 48 hours of no response it will automatically be set to complete.</p>
+                    </div>
+                    `
+                }
+                else if(message.includes('/SERVER/'))
                 {
                     message = message.replace("/SERVER/", "")
                     chatsEl.innerHTML += `
                     <div class='server'>
                         <p class="name bold">SERVER</p>
-                        <p class="message">Files have been submited and are now downloadable <a href='/orders/downloadfiles/submitted/${message}'>here.</a></p>
+                        <p class="message">Files for Order #${message} have been submited and are now downloadable <a href='/orders/downloadfiles/submitted/${message}'>here.</a></p>
                     </div>
                     `
-                }
+                }   
                 else if(youSent)
                 {
                     chatsEl.innerHTML += `

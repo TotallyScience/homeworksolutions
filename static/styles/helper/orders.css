@@ -144,12 +144,23 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
 }
+
+#popup .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 #popup .user {
     font-size: 1.3rem;
 }
 
 #popup a {
     color: var(--accent-color);
+}
+
+#popup a.negative {
+    color: red;
 }
 
 #popup .details {

@@ -79,6 +79,7 @@ router.get('/', async (req, res) => {
                             instructions: orders[i].instructions,
                             open: orders[i].open,
                             files: orders[i].files.length,
+                            helperCompletedDate: orders[i].helperCompletedDate,
                         });
                     }
                 }
@@ -311,5 +312,200 @@ router.post(
         }
     }
 );
+
+router.get('/completeOrder/:orderid', async (req, res) => {
+    if (res.locals.isLoggedIn) {
+        const id = decodeToken(req.cookies.access_token).id;
+        const orderid = req.params.orderid;
+
+        if (!res.locals.isHelper) {
+            //client finish order
+            await Order.updateOne(
+                { _id: orderid },
+                {
+                    completed: true,
+                }
+            );
+
+            const order = await Order.findOne({ _id: orderid }).select(
+                'helperid'
+            );
+
+            if (id.localeCompare(order.helperid) >= 1) {
+                var room = id + order.helperid;
+            } else {
+                var room = order.helperid + id;
+            }
+
+            await req.io
+                .to(room)
+                .emit('message', `/SERVER/CLIENTCOMPLETE/${orderid}`);
+
+            const messsage = new Message({
+                recipient: order.helperid,
+                sender: id,
+                message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
+            });
+            await messsage.save().catch((err) => {
+                console.log(err);
+            });
+
+            res.redirect(`/chat?user=${order.helperid}`);
+        } else {
+            //helper finish order
+            await Order.updateOne(
+                { _id: orderid },
+                {
+                    helperCompletedDate: new Date(),
+                }
+            );
+
+            const order = await Order.findOne({ _id: orderid }).select(
+                'userid'
+            );
+
+            if (id.localeCompare(order.userid) >= 1) {
+                var room = id + order.userid;
+            } else {
+                var room = order.userid + id;
+            }
+
+            await req.io
+                .to(room)
+                .emit('message', `/SERVER/HELPERCOMPLETE/${orderid}`);
+
+            const messsage = new Message({
+                recipient: order.userid,
+                sender: id,
+                message: `/SERVER/HELPERCOMPLETE/${orderid}`,
+            });
+            await messsage.save().catch((err) => {
+                console.log(err);
+            });
+
+            const hours48 = 48 * 60 * 60 * 1000; //in ms
+            //const hours48 = 5000; //in ms
+            // Set a timer for 48 hours in the future
+            setTimeout(async () => {
+                //console.log('Executing');
+                // Check if the request has been declined
+                const order = await Order.findOne({ _id: orderid }).select(
+                    'helperCompletedDate'
+                );
+
+                if (new Date() - order.helperCompletedDate >= hours48) {
+                    // Call the function if the request has not been declined
+                    await Order.updateOne(
+                        { _id: orderid },
+                        {
+                            completed: true,
+                        }
+                    );
+
+                    //send complete message
+                    await Order.updateOne(
+                        { _id: orderid },
+                        {
+                            completed: true,
+                        }
+                    );
+
+                    const order = await Order.findOne({ _id: orderid }).select(
+                        'helperid'
+                    );
+
+                    if (id.localeCompare(order.helperid) >= 1) {
+                        var room = id + order.helperid;
+                    } else {
+                        var room = order.helperid + id;
+                    }
+
+                    await req.io
+                        .to(room)
+                        .emit('message', `/SERVER/CLIENTCOMPLETE/${orderid}`);
+
+                    const messsage = new Message({
+                        recipient: order.helperid,
+                        sender: id,
+                        message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
+                    });
+                    await messsage.save().catch((err) => {
+                        console.log(err);
+                    });
+                }
+            }, hours48);
+            res.redirect(`/chat?user=${order.userid}`);
+        }
+    } else {
+        res.redirect('/account/signup');
+    }
+});
+
+router.get('/completeOrder/cancel/:orderid', async (req, res) => {
+    const id = decodeToken(req.cookies.access_token).id;
+    const orderid = req.params.orderid;
+    if (res.locals.isHelper) {
+        await Order.updateOne(
+            { _id: orderid },
+            {
+                helperCompletedDate: '',
+            }
+        );
+
+        const order = await Order.findOne({ _id: orderid }).select('userid');
+
+        if (id.localeCompare(order.userid) >= 1) {
+            var room = id + order.userid;
+        } else {
+            var room = order.userid + id;
+        }
+
+        await req.io
+            .to(room)
+            .emit('message', `/SERVER/CANCELCOMPLETE/${orderid}`);
+
+        const messsage = new Message({
+            recipient: order.userid,
+            sender: id,
+            message: `/SERVER/CANCELCOMPLETE/${orderid}`,
+        });
+        await messsage.save().catch((err) => {
+            console.log(err);
+        });
+
+        res.redirect(`/chat?user=${order.userid}`);
+    } else if (res.locals.isLoggedIn) {
+        await Order.updateOne(
+            { _id: orderid },
+            {
+                helperCompletedDate: '',
+            }
+        );
+
+        const order = await Order.findOne({ _id: orderid }).select('helperid');
+
+        if (id.localeCompare(order.helperid) >= 1) {
+            var room = id + order.helperid;
+        } else {
+            var room = order.helperid + id;
+        }
+
+        await req.io
+            .to(room)
+            .emit('message', `/SERVER/CANCELCOMPLETE/${orderid}`);
+
+        const messsage = new Message({
+            recipient: order.helperid,
+            sender: id,
+            message: `/SERVER/CANCELCOMPLETE/${orderid}`,
+        });
+        await messsage.save().catch((err) => {
+            console.log(err);
+        });
+        res.redirect(`/chat?user=${order.helperid}`);
+    } else {
+        res.redirect('/account/signup');
+    }
+});
 
 module.exports = router;
