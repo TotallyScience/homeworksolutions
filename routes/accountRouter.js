@@ -108,6 +108,11 @@ router.post('/login', bodyParser.urlencoded({ extended: true }), (req, res) => {
     }
 });
 
+router.get('/logout', (req, res) => {
+    res.clearCookie('access_token');
+    res.redirect('/account/signup');
+});
+
 async function hash(string) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(string, salt);

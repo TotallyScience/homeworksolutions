@@ -19,17 +19,22 @@ router.post(
     '/',
     upload.array('pdf'),
     bodyParser.urlencoded({ extended: true }),
-    (req, res) => {
+    async (req, res) => {
         console.log(req.files);
         const { type, details, size, spacing, deadline, instructions } =
             req.body;
+        let id = decodeToken(req.cookies.access_token).id;
 
         //const buffer = Buffer.from(file.buffer, 'binary');
         //console.log(req.files);
         const className = req.query.class;
         let error = '';
 
-        if (
+        let yourOrders = await Order.find({ userid: id, completed: false });
+
+        if (yourOrders.length >= 5) {
+            error = '*You can only place up to 5 orders';
+        } else if (
             type.length < 1 ||
             details.length < 1 ||
             size.length < 1 ||
@@ -75,7 +80,6 @@ router.post(
         } else {
             let files = req.files.map((file) => file.buffer);
             let fileTypes = req.files.map((file) => file.mimetype);
-            let id = decodeToken(req.cookies.access_token).id;
             const order = new Order({
                 userid: id,
                 class: className,

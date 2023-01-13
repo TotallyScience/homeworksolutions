@@ -75,6 +75,7 @@
 
 #rightbar a {
     text-decoration: none;
+    margin-left: 20px;
 }
 
 #rightbar img {
@@ -83,7 +84,6 @@
 
 #rightbar p {
     font-size: 17px;
-    margin-left: 20px;
 }
 
 #rightbar p span {

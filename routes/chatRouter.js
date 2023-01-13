@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const Account = require('../models/account');
 const Message = require('../models/message');
+const Order = require('../models/order');
 
 const { decodeToken, requireLogin } = require('../middleware/isLoggedIn.js');
 
@@ -135,7 +136,7 @@ router.post('/send', bodyParser.json(), async (req, res) => {
 
 router.get('/newchat', async (req, res) => {
     const sender = decodeToken(req.cookies.access_token).id;
-    const recipient = '63927b63fa94e41ab1b09dec';
+    const recipient = '63c0cf1c6d2aff65c36a7316';
 
     let recipientUser = await Account.findOne({ _id: recipient }).catch(
         (err) => {
@@ -159,6 +160,50 @@ router.get('/newchat', async (req, res) => {
     }
 
     res.redirect(`/chat?user=${recipient}`);
+});
+
+router.post('/review', bodyParser.json(), async (req, res) => {
+    if (res.locals.isLoggedIn && !res.locals.isHelper) {
+        const id = decodeToken(req.cookies.access_token).id;
+        const { helperid, rating } = req.body;
+
+        let verifyOrder = await Order.findOne({
+            helperid: helperid,
+            userid: id,
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        if (verifyOrder) {
+            await Account.updateOne({ _id: helperid }, [
+                {
+                    $addFields: {
+                        newStars: {
+                            $divide: [
+                                {
+                                    $add: [
+                                        { $multiply: ['$stars', '$reviews'] },
+                                        rating,
+                                    ],
+                                },
+                                { $sum: ['$reviews', 1] },
+                            ],
+                        },
+                        reviews: { $add: ['$reviews', 1] },
+                    },
+                },
+                { $set: { stars: '$newStars' } },
+                { $set: { reviews: '$reviews' } },
+            ]);
+
+            res.send('Success');
+        }
+    }
+});
+
+router.get('/deleteall', async (req, res) => {
+    await Message.deleteMany({});
+    res.redirect('/chat');
 });
 
 module.exports = router;

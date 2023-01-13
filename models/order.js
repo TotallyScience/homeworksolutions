@@ -69,7 +69,6 @@ const orderSchema = new Schema(
         },
         helperCompletedDate: {
             type: Date,
-            required: true,
         },
         submittedFiles: [
             {

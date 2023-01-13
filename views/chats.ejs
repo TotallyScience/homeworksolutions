@@ -78,7 +78,106 @@
                     
             </div>
         </div>
+
+        <div id="reviewPopup" style="display: ;">
+            <p class="title">Leave a review for <%=currentChatter.username%></p>
+            <div class="starCon" onmouseout="noStars()">
+                <img class="star" onmouseover="starHover(1)" onclick="starSelect(1)" src="/images/icons/emptystar.png">
+                <img class="star" onmouseover="starHover(2)" onclick="starSelect(2)" src="/images/icons/emptystar.png">
+                <img class="star" onmouseover="starHover(3)" onclick="starSelect(3)" src="/images/icons/emptystar.png">
+                <img class="star" onmouseover="starHover(4)" onclick="starSelect(4)" src="/images/icons/emptystar.png">
+                <img class="star" onmouseover="starHover(5)" onclick="starSelect(5)" src="/images/icons/emptystar.png">
+            </div>
+            <div class="buttonCon">
+                <button onclick="closeRating()" class="common-button alt">Cancel</button>
+                <button onclick="submitRating()" class="common-button">Submit</button>
+            </div>
+        </div>
+
+
         <script>
+            let starSelected = false;
+            let trueRating = 0;
+
+            function closeRating()
+            {
+                document.getElementById("reviewPopup").style.display="none";
+            }
+
+            function submitRating()
+            {
+                closeRating();
+                fetch('/chat/review', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        helperid:'<%=currentChatter._id%>',
+                        rating: trueRating
+                    }),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
+                }).then(res => {
+                    console.log(res);
+                    console.log("Now delete the option to leave a rating");
+                })
+            }
+
+            function openRating()
+            {
+                document.getElementById("reviewPopup").style.display="";
+            }
+
+            function starHover(rating)
+            {
+                for(let i = 0; i<rating; i++)
+                {
+                    document.getElementsByClassName("star")[i].setAttribute("src", "/images/icons/filledstar.png")
+                }
+                for(let i = 0; i<5-rating; i++)
+                {
+                    document.getElementsByClassName("star")[4-i].setAttribute("src", "/images/icons/emptystar.png")
+                }
+            }
+
+            function starSelect(rating)
+            {
+                trueRating = rating;
+                starSelected = true;
+                for(let i = 0; i<rating; i++)
+                {
+                    document.getElementsByClassName("star")[i].setAttribute("src", "/images/icons/filledstar.png")
+                }
+                for(let i = 0; i<5-rating; i++)
+                {
+                    document.getElementsByClassName("star")[4-i].setAttribute("src", "/images/icons/emptystar.png")
+                }
+            }
+
+            function noStars()
+            {
+                if(!starSelected)
+                {
+                    for(let i = 0; i<5; i++)
+                    {
+                        document.getElementsByClassName("star")[i].setAttribute("src", "/images/icons/emptystar.png")
+                    }
+                }
+                else
+                {
+                    for(let i = 0; i<trueRating; i++)
+                    {
+                        document.getElementsByClassName("star")[i].setAttribute("src", "/images/icons/filledstar.png")
+                    }
+                    for(let i = 0; i<5-trueRating; i++)
+                    {
+                        document.getElementsByClassName("star")[4-i].setAttribute("src", "/images/icons/emptystar.png")
+                    }
+                }
+            }
+
+
+
+
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
 
