@@ -179,14 +179,24 @@ router.post('/review', bodyParser.json(), async (req, res) => {
                 {
                     $addFields: {
                         newStars: {
-                            $divide: [
+                            $round: [
                                 {
-                                    $add: [
-                                        { $multiply: ['$stars', '$reviews'] },
-                                        rating,
+                                    $divide: [
+                                        {
+                                            $add: [
+                                                {
+                                                    $multiply: [
+                                                        '$stars',
+                                                        '$reviews',
+                                                    ],
+                                                },
+                                                rating,
+                                            ],
+                                        },
+                                        { $sum: ['$reviews', 1] },
                                     ],
                                 },
-                                { $sum: ['$reviews', 1] },
+                                1,
                             ],
                         },
                         reviews: { $add: ['$reviews', 1] },
@@ -195,6 +205,25 @@ router.post('/review', bodyParser.json(), async (req, res) => {
                 { $set: { stars: '$newStars' } },
                 { $set: { reviews: '$reviews' } },
             ]);
+
+            await Message.deleteOne({ message: `/SERVER/REVIEW/` });
+
+            if (id.localeCompare(helperid) >= 1) {
+                var room = id + helperid;
+            } else {
+                var room = helperid + id;
+            }
+
+            await req.io.to(room).emit('message', `/SERVER/LEFTREVIEW/`);
+
+            const reviewMesssage = new Message({
+                recipient: helperid,
+                sender: id,
+                message: `/SERVER/LEFTREVIEW/`,
+            });
+            await reviewMesssage.save().catch((err) => {
+                console.log(err);
+            });
 
             res.send('Success');
         }

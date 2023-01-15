@@ -44,7 +44,17 @@
                         <%if(chat.message.includes('/SERVER/CLIENTCOMPLETE/')){%>
                             <div class='server'>
                                 <p class="name bold">SERVER</p>
-                                <p class="message">Order #<%=chat.message.replace("/SERVER/CLIENTCOMPLETE/", "")%> has been marked as complete. Thank you for using Homework Solutions. Please leave a rating for the client...</p>
+                                <p class="message">Order #<%=chat.message.replace("/SERVER/CLIENTCOMPLETE/", "")%> has been marked as complete. Thank you for using Homework Solutions.</p>
+                            </div>
+                        <%} else if (chat.message.includes('/SERVER/REVIEW/')){ %>
+                            <div class='server'>
+                                <p class="name bold">SERVER</p>
+                                <p class="message">Please click <a href="javascript:void(0)" onclick="openRating()">here</a> to leave a review for your helper.</p>
+                            </div>
+                        <%} else if (chat.message.includes('/SERVER/LEFTREVIEW/')){ %>
+                            <div class='server'>
+                                <p class="name bold">SERVER</p>
+                                <p class="message">Thank you for leaving a review for your helper.</p>
                             </div>
                         <%} else if (chat.message.includes('/SERVER/CANCELCOMPLETE/')){ %>
                             <div class='server'>
@@ -79,7 +89,7 @@
             </div>
         </div>
 
-        <div id="reviewPopup" style="display: ;">
+        <div id="reviewPopup" style="display: none;">
             <p class="title">Leave a review for <%=currentChatter.username%></p>
             <div class="starCon" onmouseout="noStars()">
                 <img class="star" onmouseover="starHover(1)" onclick="starSelect(1)" src="/images/icons/emptystar.png">
@@ -224,6 +234,7 @@
 
             function appendMessage(youSent, message)
             {   
+                
                 const chatsEl = document.getElementById('chatView');
                 if(message.includes('/SERVER/CLIENTCOMPLETE/'))
                 {
@@ -231,7 +242,25 @@
                     chatsEl.innerHTML += `
                     <div class='server'>
                         <p class="name bold">SERVER</p>
-                        <p class="message">Order #${message} has been marked as complete. Thank you for using Homework Solutions. Please leave a rating for the client...</p>
+                        <p class="message">Order #${message} has been marked as complete. Thank you for using Homework Solutions.</p>
+                    </div>
+                    `
+                }
+                else if(message.includes('/SERVER/REVIEW/'))
+                {
+                    chatsEl.innerHTML += `
+                    <div class='server'>
+                        <p class="name bold">SERVER</p>
+                        <p class="message">Please click <a href="javascript:void(0)" onclick="openRating()">here</a> to leave a review for your helper.</p>
+                    </div>
+                    `
+                }
+                else if(message.includes('/SERVER/LEFTREVIEW/'))
+                {
+                    chatsEl.innerHTML += `
+                    <div class='server'>
+                        <p class="name bold">SERVER</p>
+                        <p class="message">Thank you for leaving a review for your helper.</p>
                     </div>
                     `
                 }

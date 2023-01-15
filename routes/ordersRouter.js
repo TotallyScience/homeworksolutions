@@ -134,31 +134,6 @@ router.get('/activeorder/:orderid', async (req, res) => {
     }
 });
 
-router.post(
-    '/activeorder/:orderid',
-    bodyParser.urlencoded({ extended: true }),
-    async (req, res) => {
-        if (res.locals.isLoggedIn && res.locals.isHelper) {
-            const id = decodeToken(req.cookies.access_token).id;
-            let orderid = req.params.orderid;
-            console.log(req.body);
-            await Order.updateOne(
-                { _id: orderid },
-                {
-                    completed: true,
-                    answers: req.body.answers,
-                }
-            ).then(async (order) => {
-                res.redirect('/orders');
-            });
-        } else if (!res.locals.isHelper) {
-            res.redirect('/');
-        } else {
-            res.redirect('/account/signup');
-        }
-    }
-);
-
 router.get('/completedorder/:orderid', async (req, res) => {
     if (res.locals.isLoggedIn && !res.locals.isHelper) {
         const id = decodeToken(req.cookies.access_token).id;
@@ -340,6 +315,7 @@ router.get('/completeOrder/:orderid', async (req, res) => {
             await req.io
                 .to(room)
                 .emit('message', `/SERVER/CLIENTCOMPLETE/${orderid}`);
+            await req.io.to(room).emit('message', `/SERVER/REVIEW/`);
 
             const messsage = new Message({
                 recipient: order.helperid,
@@ -347,6 +323,14 @@ router.get('/completeOrder/:orderid', async (req, res) => {
                 message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
             });
             await messsage.save().catch((err) => {
+                console.log(err);
+            });
+            const reviewMesssage = new Message({
+                recipient: order.helperid,
+                sender: id,
+                message: `/SERVER/REVIEW/`,
+            });
+            await reviewMesssage.save().catch((err) => {
                 console.log(err);
             });
 
