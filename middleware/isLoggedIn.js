@@ -41,4 +41,18 @@ const requireLogin = async (req, res, next) => {
     next();
 };
 
-module.exports = { decodeToken, isLoggedIn, checkLogin, requireLogin };
+const requireHelper = async (req, res, next) => {
+    if (!(await isLoggedIn(req.cookies.access_token, res)) && !req.isHelper) {
+        return res.redirect('/account/signup');
+    }
+
+    next();
+};
+
+module.exports = {
+    decodeToken,
+    isLoggedIn,
+    checkLogin,
+    requireLogin,
+    requireHelper,
+};

@@ -20,11 +20,17 @@ router.post(
     upload.array('pdf'),
     bodyParser.urlencoded({ extended: true }),
     async (req, res) => {
-        console.log(req.files);
-        const { type, details, size, spacing, deadline, instructions } =
-            req.body;
+        const {
+            subject,
+            othersubject,
+            type,
+            size,
+            sizeSpecifier,
+            spacing,
+            deadline,
+            instructions,
+        } = req.body;
         let id = decodeToken(req.cookies.access_token).id;
-
         //const buffer = Buffer.from(file.buffer, 'binary');
         //console.log(req.files);
         const className = req.query.class;
@@ -35,13 +41,15 @@ router.post(
         if (yourOrders.length >= 5) {
             error = '*You can only place up to 5 orders';
         } else if (
+            subject.length < 1 ||
             type.length < 1 ||
-            details.length < 1 ||
             size.length < 1 ||
             deadline.length < 1 ||
             spacing.length < 1
         ) {
             error = '*You must fill out all details';
+        } else if (subject == 'Other' && othersubject == '') {
+            error = '*You must specify the subject';
         } else if (req.files.length > 4) {
             error = '*You can only upload up to 4 files';
         } else if (req.files != null) {
@@ -57,36 +65,47 @@ router.post(
                 size += file.size;
                 return true;
             });
-            console.log(size);
             if (size > 15000000) {
                 error = '*Max file upload size is 15 mb';
             }
         }
         if (error != '') {
             const form = {
+                subject: subject,
                 type: type,
-                details: details,
                 size: size,
                 deadline: deadline,
                 instructions: instructions,
                 spacing: spacing,
+                sizeSpecifier: sizeSpecifier,
             };
 
             res.render('order', {
                 class: className,
                 error: error,
                 form: form,
+                order: 'selected',
             });
         } else {
+            if (subject == 'Other' && othersubject != '') {
+                var submitSubj = othersubject;
+            } else {
+                var submitSubj = subject;
+            }
+            if (sizeSpecifier == 'pages') {
+                var submitSpacing = spacing;
+            } else {
+                var submitSpacing = 'NA';
+            }
             let files = req.files.map((file) => file.buffer);
             let fileTypes = req.files.map((file) => file.mimetype);
             const order = new Order({
                 userid: id,
-                class: className,
+                class: submitSubj,
                 type: type,
-                details: details,
                 size: size,
-                spacing: spacing,
+                sizeSpecifier: sizeSpecifier,
+                spacing: submitSpacing,
                 deadline: deadline,
                 instructions: instructions,
                 open: true,

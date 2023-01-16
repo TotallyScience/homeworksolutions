@@ -14,7 +14,7 @@
             <% if(orders.length <= 0) {%>
             <p class="h2">
                 You have no orders.
-                <a href="/services">Get your homework done</a>
+                <a href="/order">Get your homework done</a>
             </p>
             <% } %>
         </div>
@@ -33,9 +33,8 @@
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
+                    &emsp;-<%=order.size%> <%=order.sizeSpecifier%><br />
+                    <%if(order.spacing != 'NA'){%> &emsp;-<%=order.spacing%> spaced <br /><%}%>
                 </p>
                 <%if(order.submittedFiles.length > 0){%>
                 <img class="submittedWarning" src="/images/icons/file.png"></img>
@@ -101,16 +100,33 @@
             %>
             <div class="con" id="<%=order.id%>">
                 <div>
+                    <div class="userid" style="display: none">
+                        <%=order.helperid._id%>
+                    </div>
+                    <div class="username" style="display: none">
+                        <%=order.helperid.username%>
+                    </div>
+                    <div class="realdesc" style="display: none">
+                        <%=order.instructions%>
+                    </div>
+                    <div class="helperstars" style="display: none">
+                        <%=order.helperid.stars%>
+                    </div>
+                    <div class="files" style="display: none">
+                        <%=order.files.length%>
+                    </div>
+                    <div class="submittedfiles" style="display: none">
+                        <%=order.submittedFiles.length%>
+                    </div>
                     <p class="class"><%=order.class.toUpperCase()%></p>
                     <p class="desc">
                         <%=order.type%><br />
-                        <%=order.details%><br />
-                        <%=order.size%> pages<br />
-                        <%=order.spacing%> spaced
+                        &emsp;-<%=order.size%> <%=order.sizeSpecifier%><br />
+                        <%if(order.spacing != 'NA'){%> &emsp;-<%=order.spacing%> spaced <br /><%}%>
                     </p>
                     <p class="date">Due date: <%=order.deadline%></p>
                     <div class="buttonCon">
-                        <button class="common-button alt">Details</button>
+                        <button onclick="showPastModel('<%=order.id%>')" class="common-button alt">Details</button>
                     </div>
                 </div>
             </div>
@@ -119,8 +135,8 @@
         <div id="popup" style="display: none; padding-bottom: 15px">
             <p class="title" id="popClass"></p>
             <div class="topbar">
-                <p>
-                Your order is being completed by
+                <p >
+                <span id="popSubtitle">Your order is being completed by</span>
                     <span class="bold" id="popUser"></span>⭐<span
                     id="popRating"
                     ></span>
@@ -174,11 +190,93 @@
         }
 
         function showProgressModel(id) {
-            //console.log(id);
             document.getElementById('popup').style.display = '';
-            //document.getElementById('orderId').value = id;
-            //console.log(document.getElementById(id));
-            // console.log(id);
+            document.getElementById('popSubtitle').innerHTML = 'Your order is being completed by';
+
+            let userid = document
+                .getElementById(id)
+                .querySelector('.userid').innerHTML;
+            console.log(userid.trim());
+            document
+                .getElementById('popChatButton')
+                .setAttribute(
+                    'onclick',
+                    `window.open('/chat?user=${userid.trim()}', '_self')`
+                );
+            document.getElementById('popUser').innerHTML = document
+                .getElementById(id)
+                .querySelector('.username').innerHTML;
+            document.getElementById('popRating').innerHTML = document
+                .getElementById(id)
+                .querySelector('.helperstars').innerHTML;
+            document.getElementById('popClass').innerHTML = document
+                .getElementById(id)
+                .querySelector('.class').innerHTML;
+            document.getElementById('popDetails').innerHTML = document
+                .getElementById(id)
+                .querySelector('.desc').innerHTML;
+            if (
+                document.getElementById(id).querySelector('.files').innerHTML >
+                0
+            ) {
+                document.getElementById('download').style.display = '';
+                document
+                    .getElementById('fileslink')
+                    .setAttribute('href', `/orders/downloadfiles/${id}`);
+            } else {
+                document.getElementById('download').style.display = 'none';
+            }
+            
+            if (
+                document.getElementById(id).querySelector('.submittedfiles')
+                    .innerHTML > 0
+            ) {
+                document.getElementById('completeDownload').style.display = '';
+                document
+                    .getElementById('completedfileslink')
+                    .setAttribute(
+                        'href',
+                        `/orders/downloadfiles/submitted/${id}`
+                    );
+            } else {
+                document.getElementById('completeDownload').style.display =
+                    'none';
+            }
+            document.getElementById('popReqs').innerHTML = document
+                .getElementById(id)
+                .querySelector('.realdesc').innerHTML;
+            document.getElementById('popupMarkComplete').style.display = "";
+            document.getElementById('popupMarkComplete').setAttribute('onclick', `completeAssignment('${id}')`);
+            if(document
+                    .getElementById(id)
+                    .querySelector('.helperCompletedDate')
+                    .innerHTML.trim() != '')
+            {
+                document.getElementById('popupMarkIncomplete').setAttribute('onclick', `markIncomplete('${id}')`);
+                document.getElementById('popupMarkIncomplete').style.display = '';
+            }
+            
+        }
+
+        function completeAssignment(id)
+        {
+            if(confirm("Are you sure you want to mark this as complete? You cannot undo this."))
+            {
+                window.open(`/orders/completeOrder/${id}`, '_self');
+            }
+        }
+
+        function markIncomplete(id) {
+            if (confirm('Are you sure you want to mark this as incomplete?')) {
+                window.open(`/orders/completeOrder/cancel/${id}`, '_self');
+            }
+        }
+
+        function showPastModel(id)
+        {
+            document.getElementById('popup').style.display = '';
+            document.getElementById('popSubtitle').innerHTML = 'Your order was completed by';
+
             let userid = document
                 .getElementById(id)
                 .querySelector('.userid').innerHTML;
@@ -230,30 +328,8 @@
             document.getElementById('popReqs').innerHTML = document
                 .getElementById(id)
                 .querySelector('.realdesc').innerHTML;
-            document.getElementById('popupMarkComplete').setAttribute('onclick', `completeAssignment('${id}')`);
-            if(document
-                    .getElementById(id)
-                    .querySelector('.helperCompletedDate')
-                    .innerHTML.trim() != '')
-            {
-                document.getElementById('popupMarkIncomplete').setAttribute('onclick', `markIncomplete('${id}')`);
-                document.getElementById('popupMarkIncomplete').style.display = '';
-            }
-            
-        }
-
-        function completeAssignment(id)
-        {
-            if(confirm("Are you sure you want to mark this as complete? You cannot undo this."))
-            {
-                window.open(`/orders/completeOrder/${id}`, '_self');
-            }
-        }
-
-        function markIncomplete(id) {
-            if (confirm('Are you sure you want to mark this as incomplete?')) {
-                window.open(`/orders/completeOrder/cancel/${id}`, '_self');
-            }
+            document.getElementById('popupMarkIncomplete').style.display = 'none';
+            document.getElementById('popupMarkComplete').style.display = 'none';
         }
     </script>
 </html>

@@ -123,7 +123,7 @@ body {
 
 #popup {
     width: 40vw;
-    height: 700px;
+    max-height: 700px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -138,6 +138,7 @@ body {
     -webkit-box-shadow: 3px 3px 5px 6px var(--box-shadow-color);
     box-shadow: 3px 3px 5px 2px var(--box-shadow-color);
     z-index: 100;
+    padding-bottom: 15px;
 }
 
 #popup .title {

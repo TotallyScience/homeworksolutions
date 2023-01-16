@@ -51,7 +51,7 @@ body {
 }
 
 #current .con {
-    width: 200px;
+    max-width: 200px;
     padding: 10px;
     border-radius: 15px;
     border: solid 2px var(--dark-color);
@@ -112,9 +112,11 @@ body {
 }
 
 #current .date {
-    margin-top: 15px;
+    padding-top: 15px;
+    margin-top: auto;
     font-size: 1.2rem;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 #current button {
@@ -123,7 +125,7 @@ body {
 
 #popup {
     width: 40vw;
-    height: 700px;
+    max-height: 700px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;

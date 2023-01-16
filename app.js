@@ -42,8 +42,8 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/services', (req, res) => {
-    res.render('services', { services: 'selected' });
+app.get('/order', (req, res) => {
+    res.render('order', { order: 'selected' });
 });
 
 app.get('/helpers', (req, res) => {

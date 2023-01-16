@@ -123,9 +123,22 @@
     padding: 10px;
 }
 
-#chatCon .chatView div .message {
-    margin-top: 5px;
-    margin-left: 10px;
+#chatCon .chatView div .topMessage {
+    display: flex;
+    justify-content: space-between;
+    padding: 0%;
+    background-color: transparent;
+}
+
+#chatCon .chatView div .topMessage {
+    display: flex;
+    justify-content: space-between;
+    padding: 0%;
+    background-color: transparent;
+}
+
+#chatCon .chatView div .topMessage .time {
+    opacity: 0.7;
 }
 
 #chatCon .chatView div.you {

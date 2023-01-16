@@ -15,11 +15,11 @@ const orderSchema = new Schema(
             type: String,
             required: true,
         },
-        details: {
+        size: {
             type: String,
             required: true,
         },
-        size: {
+        sizeSpecifier: {
             type: String,
             required: true,
         },

@@ -41,9 +41,9 @@
                 <p class="bold">Details</p>
                 <p class="norm">
                     <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
+                    &emsp;-<%=order.size%> <%=order.sizeSpecifier%><br />
+                    <%if(order.spacing != 'NA'){%> &emsp;-<%=order.spacing%>
+                    spaced <br /><%}%>
                 </p>
                 <div>
                     <p class="bold">Requirements</p>

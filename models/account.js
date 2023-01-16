@@ -32,6 +32,7 @@ const accountSchema = new Schema(
         },
         completedOrders: {
             type: Number,
+            required: true,
         },
         chats: [
             {

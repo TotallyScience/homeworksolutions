@@ -12,7 +12,11 @@ const multer = require('multer');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-const { decodeToken } = require('../middleware/isLoggedIn.js');
+const {
+    decodeToken,
+    requireLogin,
+    requireHelper,
+} = require('../middleware/isLoggedIn.js');
 
 const router = express.Router();
 
@@ -34,7 +38,17 @@ router.get('/', async (req, res) => {
                             });
                     }
                     Order.find({ userid: id, completed: true }).then(
-                        (pastOrders) => {
+                        async (pastOrders) => {
+                            for (let i = 0; i < pastOrders.length; i++) {
+                                pastOrders[i] = await pastOrders[i]
+                                    .populate({
+                                        path: 'helperid',
+                                        select: 'stars username',
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                    });
+                            }
                             res.render('client/orders', {
                                 orders: orders,
                                 pastOrders: pastOrders,
@@ -72,7 +86,7 @@ router.get('/', async (req, res) => {
                             user: user[0].username,
                             class: orders[i].class,
                             type: orders[i].type,
-                            details: orders[i].details,
+                            sizeSpecifier: orders[i].sizeSpecifier,
                             size: orders[i].size,
                             spacing: orders[i].spacing,
                             deadline: orders[i].deadline,
@@ -109,29 +123,32 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/helperCompletedOrders', requireHelper, async (req, res) => {
+    const id = decodeToken(req.cookies.access_token).id;
+    let completedOrders = await Order.find({
+        open: false,
+        helperid: id,
+        completed: true,
+    });
+
+    for (let i = 0; i < completedOrders.length; i++) {
+        completedOrders[i] = await completedOrders[i]
+            .populate('userid')
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    res.render('helper/completedOrders', {
+        orders: completedOrders,
+        ordersNav: 'selected',
+    });
+});
+
 router.get('/deleteall', async (req, res) => {
     await Offer.deleteMany({});
     await Order.deleteMany({});
     res.redirect('/orders');
-});
-
-router.get('/activeorder/:orderid', async (req, res) => {
-    if (res.locals.isLoggedIn && res.locals.isHelper) {
-        const id = decodeToken(req.cookies.access_token).id;
-        let orderid = req.params.orderid;
-
-        await Order.findOne({ _id: orderid }).then(async (order) => {
-            if (order.open == true || order.helperid != id) {
-                res.redirect('/orders');
-            }
-            order = await order.populate('userid');
-            res.render('helper/activeorder', { order: order });
-        });
-    } else if (!res.locals.isHelper) {
-        res.redirect('/');
-    } else {
-        res.redirect('/account/signup');
-    }
 });
 
 router.get('/completedorder/:orderid', async (req, res) => {
@@ -295,46 +312,56 @@ router.get('/completeOrder/:orderid', async (req, res) => {
 
         if (!res.locals.isHelper) {
             //client finish order
-            await Order.updateOne(
-                { _id: orderid },
-                {
-                    completed: true,
-                }
-            );
 
             const order = await Order.findOne({ _id: orderid }).select(
-                'helperid'
+                'helperid userid'
             );
 
-            if (id.localeCompare(order.helperid) >= 1) {
-                var room = id + order.helperid;
-            } else {
-                var room = order.helperid + id;
+            if (order.userid == id) {
+                await Order.updateOne(
+                    { _id: orderid },
+                    {
+                        completed: true,
+                    }
+                );
+
+                await Account.updateOne(
+                    { _id: order.helperid },
+                    {
+                        $inc: { completedOrders: 1 },
+                    }
+                );
+
+                if (id.localeCompare(order.helperid) >= 1) {
+                    var room = id + order.helperid;
+                } else {
+                    var room = order.helperid + id;
+                }
+
+                await req.io
+                    .to(room)
+                    .emit('message', `/SERVER/CLIENTCOMPLETE/${orderid}`);
+                await req.io.to(room).emit('message', `/SERVER/REVIEW/`);
+
+                const messsage = new Message({
+                    recipient: order.helperid,
+                    sender: id,
+                    message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
+                });
+                await messsage.save().catch((err) => {
+                    console.log(err);
+                });
+                const reviewMesssage = new Message({
+                    recipient: order.helperid,
+                    sender: id,
+                    message: `/SERVER/REVIEW/`,
+                });
+                await reviewMesssage.save().catch((err) => {
+                    console.log(err);
+                });
+
+                res.redirect(`/chat?user=${order.helperid}`);
             }
-
-            await req.io
-                .to(room)
-                .emit('message', `/SERVER/CLIENTCOMPLETE/${orderid}`);
-            await req.io.to(room).emit('message', `/SERVER/REVIEW/`);
-
-            const messsage = new Message({
-                recipient: order.helperid,
-                sender: id,
-                message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
-            });
-            await messsage.save().catch((err) => {
-                console.log(err);
-            });
-            const reviewMesssage = new Message({
-                recipient: order.helperid,
-                sender: id,
-                message: `/SERVER/REVIEW/`,
-            });
-            await reviewMesssage.save().catch((err) => {
-                console.log(err);
-            });
-
-            res.redirect(`/chat?user=${order.helperid}`);
         } else {
             //helper finish order
             await Order.updateOne(
@@ -345,80 +372,83 @@ router.get('/completeOrder/:orderid', async (req, res) => {
             );
 
             const order = await Order.findOne({ _id: orderid }).select(
-                'userid'
+                'userid helperid'
             );
-
-            if (id.localeCompare(order.userid) >= 1) {
-                var room = id + order.userid;
-            } else {
-                var room = order.userid + id;
-            }
-
-            await req.io
-                .to(room)
-                .emit('message', `/SERVER/HELPERCOMPLETE/${orderid}`);
-
-            const messsage = new Message({
-                recipient: order.userid,
-                sender: id,
-                message: `/SERVER/HELPERCOMPLETE/${orderid}`,
-            });
-            await messsage.save().catch((err) => {
-                console.log(err);
-            });
-
-            const hours48 = 48 * 60 * 60 * 1000; //in ms
-            //const hours48 = 5000; //in ms
-            // Set a timer for 48 hours in the future
-            setTimeout(async () => {
-                //console.log('Executing');
-                // Check if the request has been declined
-                const order = await Order.findOne({ _id: orderid }).select(
-                    'helperCompletedDate'
-                );
-
-                if (new Date() - order.helperCompletedDate >= hours48) {
-                    // Call the function if the request has not been declined
-                    await Order.updateOne(
-                        { _id: orderid },
-                        {
-                            completed: true,
-                        }
-                    );
-
-                    //send complete message
-                    await Order.updateOne(
-                        { _id: orderid },
-                        {
-                            completed: true,
-                        }
-                    );
-
-                    const order = await Order.findOne({ _id: orderid }).select(
-                        'helperid'
-                    );
-
-                    if (id.localeCompare(order.helperid) >= 1) {
-                        var room = id + order.helperid;
-                    } else {
-                        var room = order.helperid + id;
-                    }
-
-                    await req.io
-                        .to(room)
-                        .emit('message', `/SERVER/CLIENTCOMPLETE/${orderid}`);
-
-                    const messsage = new Message({
-                        recipient: order.helperid,
-                        sender: id,
-                        message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
-                    });
-                    await messsage.save().catch((err) => {
-                        console.log(err);
-                    });
+            if (order.helperid == id) {
+                if (id.localeCompare(order.userid) >= 1) {
+                    var room = id + order.userid;
+                } else {
+                    var room = order.userid + id;
                 }
-            }, hours48);
-            res.redirect(`/chat?user=${order.userid}`);
+
+                await req.io
+                    .to(room)
+                    .emit('message', `/SERVER/HELPERCOMPLETE/${orderid}`);
+
+                const messsage = new Message({
+                    recipient: order.userid,
+                    sender: id,
+                    message: `/SERVER/HELPERCOMPLETE/${orderid}`,
+                });
+                await messsage.save().catch((err) => {
+                    console.log(err);
+                });
+
+                const hours48 = 48 * 60 * 60 * 1000; //in ms
+                //const hours48 = 5000; //in ms
+                // Set a timer for 48 hours in the future
+                setTimeout(async () => {
+                    //console.log('Executing');
+                    // Check if the request has been declined
+                    const order = await Order.findOne({ _id: orderid }).select(
+                        'helperCompletedDate'
+                    );
+
+                    if (new Date() - order.helperCompletedDate >= hours48) {
+                        // Call the function if the request has not been declined
+                        //send complete message
+                        await Order.updateOne(
+                            { _id: orderid },
+                            {
+                                completed: true,
+                            }
+                        );
+                        await Account.updateOne(
+                            { _id: id },
+                            {
+                                $inc: { completedOrders: 1 },
+                            }
+                        );
+
+                        const order = await Order.findOne({
+                            _id: orderid,
+                        }).select('helperid');
+
+                        if (id.localeCompare(order.helperid) >= 1) {
+                            var room = id + order.helperid;
+                        } else {
+                            var room = order.helperid + id;
+                        }
+
+                        await req.io
+                            .to(room)
+                            .emit(
+                                'message',
+                                `/SERVER/CLIENTCOMPLETE/${orderid}`
+                            );
+
+                        const messsage = new Message({
+                            recipient: order.helperid,
+                            sender: id,
+                            message: `/SERVER/CLIENTCOMPLETE/${orderid}`,
+                        });
+                        await messsage.save().catch((err) => {
+                            console.log(err);
+                        });
+                    }
+                }, hours48);
+                res.redirect(`/chat?user=${order.userid}`);
+            }
         }
     } else {
         res.redirect('/account/signup');
@@ -490,6 +520,16 @@ router.get('/completeOrder/cancel/:orderid', async (req, res) => {
     } else {
         res.redirect('/account/signup');
     }
+});
+
+router.get('/deleteOrder/:orderid', requireLogin, async (req, res) => {
+    const id = decodeToken(req.cookies.access_token).id;
+    const orderid = req.params.orderid;
+    const order = await Order.findOne({ _id: orderid }).select('userid');
+    if (!res.locals.isHelper && order.userid == id) {
+        await Order.deleteOne({ _id: orderid });
+    }
+    res.redirect(`/orders`);
 });
 
 module.exports = router;

@@ -2,7 +2,7 @@
 <html>
     <head>
         <%- include('includes/head.ejs') %>
-        <link rel="stylesheet" href="/styles/orders.css" />
+        <link rel="stylesheet" href="/styles/helpersoffers.css" />
     </head>
     <body>
         <%- include('includes/navbar.ejs') %>
@@ -20,6 +20,11 @@
             </button>
         </div>
         <div id="current">
+            <div id="heading">
+                <% if(orders.length <= 0) {%>
+                <p class="h2">You have made no offers.</p>
+                <% } %>
+            </div>
             <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
             <div class="con" id="<%=order.id%>">
                 <p class="username" style="display: none"><%=order.user%></p>

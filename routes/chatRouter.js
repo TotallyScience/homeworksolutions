@@ -77,11 +77,13 @@ router.get('/', requireLogin, async (req, res) => {
                 chats[key] = {
                     sender: 'You',
                     message: chats[key].message,
+                    createdAt: chats[key].createdAt,
                 };
             } else {
                 chats[key] = {
                     sender: chatter.username,
                     message: chats[key].message,
+                    createdAt: chats[key].createdAt,
                 };
             }
         });
@@ -136,7 +138,7 @@ router.post('/send', bodyParser.json(), async (req, res) => {
 
 router.get('/newchat', async (req, res) => {
     const sender = decodeToken(req.cookies.access_token).id;
-    const recipient = '63c0cf1c6d2aff65c36a7316';
+    const recipient = req.query.helper;
 
     let recipientUser = await Account.findOne({ _id: recipient }).catch(
         (err) => {

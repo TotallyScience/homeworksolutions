@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../includes/head.ejs') %>
+        <link rel="stylesheet" href="/styles/helper/orders.css" />
+    </head>
+
+    <body>
+        <%- include('../includes/navbar.ejs') %>
+        <div id="heading">
+            <p class="h1">
+                Completed Orders
+                <span class="past" onclick="window.location.href='/orders'"
+                    >(See all orders)</span
+                >
+            </p>
+        </div>
+        <div id="heading">
+            <% if(orders.length <= 0) {%>
+            <p class="h2">You have no completed orders.</p>
+            <% } %>
+        </div>
+        <div id="current">
+            <% if(orders.length > 0) { orders.forEach(order => {%>
+            <div class="con" id="<%=order.id%>">
+                <p class="class"><%=order.class.toUpperCase()%></p>
+                <p class="desc">
+                    <%=order.type%><br />
+                    &emsp;-<%=order.size%> <%=order.sizeSpecifier%><br />
+                    <%if(order.spacing != 'NA'){%> &emsp;-<%=order.spacing%>
+                    spaced <br /><%}%>
+                </p>
+                <p class="date">Due date: <%=order.deadline%></p>
+                <div class="userid" style="display: none">
+                    <%=order.userid._id%>
+                </div>
+                <p class="username" style="display: none">
+                    <%=order.userid.username%>
+                </p>
+                <p class="files" style="display: none">
+                    <%=order.files.length%>
+                </p>
+                <p class="submittedfiles" style="display: none">
+                    <%=order.submittedFiles.length%>
+                </p>
+                <div
+                    class="realdesc"
+                    style="display: none; white-space: pre-line"
+                >
+                    <%=order.instructions%>
+                </div>
+                <div class="buttonCon">
+                    <button
+                        class="common-button alt"
+                        onclick="showModel('<%=order.id%>')"
+                    >
+                        Details
+                    </button>
+                </div>
+            </div>
+
+            <% }); %> <% }; %>
+        </div>
+
+        <div id="popup" style="display: none; padding-bottom: 15px">
+            <p class="title" id="popClass"></p>
+            <div class="topbar">
+                <p>
+                    Requested by
+                    <span class="bold" id="popUser"></span>
+                </p>
+            </div>
+            <hr />
+            <div id="popDetails">
+                <br />
+                &emsp;-pages<br />
+                &emsp;- spaced <br />
+            </div>
+            <div id="download">
+                <br />
+                <a id="fileslink" href="">Download Files</a>
+            </div>
+            <div id="completeDownload">
+                <p class="bold">Your helper has submitted files</p>
+                <a id="completedfileslink" href="">Download Completed Files</a>
+            </div>
+            <div class="requirements">
+                <p class="header">Requirements</p>
+                <p class="norm" style="white-space: pre-line" id="popReqs"></p>
+            </div>
+            <div class="buttonCon">
+                <button
+                    type="button"
+                    class="common-button alt"
+                    onclick="hideModel()"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="popChatButton"
+                    type="button"
+                    class="common-button"
+                    onclick=""
+                >
+                    Chat
+                </button>
+            </div>
+        </div>
+    </body>
+    <script>
+        function showModel(id) {
+            hideModel();
+            //console.log(id);
+            document.getElementById('popup').style.display = '';
+            //document.getElementById('orderId').value = id;
+            //console.log(document.getElementById(id));
+            // console.log(id);
+            let userid = document
+                .getElementById(id)
+                .querySelector('.userid').innerHTML;
+            document
+                .getElementById('popChatButton')
+                .setAttribute(
+                    'onclick',
+                    `window.open('/chat?user=${userid.trim()}', '_self')`
+                );
+            document.getElementById('popUser').innerHTML = document
+                .getElementById(id)
+                .querySelector('.username')
+                .innerHTML.trim();
+            document.getElementById('popClass').innerHTML = document
+                .getElementById(id)
+                .querySelector('.class').innerHTML;
+
+            if (
+                document.getElementById(id).querySelector('.files').innerHTML >
+                0
+            ) {
+                document.getElementById('download').style.display = '';
+                document
+                    .getElementById('fileslink')
+                    .setAttribute('href', `/orders/downloadfiles/${id}`);
+            } else {
+                document.getElementById('download').style.display = 'none';
+            }
+            if (
+                document.getElementById(id).querySelector('.submittedfiles')
+                    .innerHTML > 0
+            ) {
+                document.getElementById('completeDownload').style.display = '';
+                document
+                    .getElementById('completedfileslink')
+                    .setAttribute(
+                        'href',
+                        `/orders/downloadfiles/submitted/${id}`
+                    );
+            } else {
+                document.getElementById('completeDownload').style.display =
+                    'none';
+            }
+            document.getElementById('popReqs').innerHTML = document
+                .getElementById(id)
+                .querySelector('.realdesc').innerHTML;
+            document.getElementById('popDetails').innerHTML = document
+                .getElementById(id)
+                .querySelector('.desc').innerHTML;
+        }
+
+        function hideModel() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</html>

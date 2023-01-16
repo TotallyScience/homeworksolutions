@@ -112,8 +112,9 @@ body {
     height: 115px;
 }
 
-#current .date {
-    margin-top: 15px;
+#current .con .date {
+    padding-top: 15px;
+    margin-top: auto;
     font-size: 1.2rem;
     font-weight: bold;
 }
@@ -131,7 +132,7 @@ body {
 
 #popup {
     width: 40vw;
-    min-height: 700px;
+    max-height: 700px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;

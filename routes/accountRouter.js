@@ -43,6 +43,7 @@ router.post(
                     helper: false,
                     stars: 0,
                     reviews: 0,
+                    completedOrders: 0,
                 });
                 account
                     .save()

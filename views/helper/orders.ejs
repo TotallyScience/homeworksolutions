@@ -9,7 +9,12 @@
         <%- include('../includes/navbar.ejs') %>
         <div id="heading">
             <p class="h1">
-                Active Orders <span class="past">(See completed orders)</span>
+                Active Orders
+                <span
+                    class="past"
+                    onclick="window.location.href='/orders/helperCompletedOrders'"
+                    >(See completed orders)</span
+                >
             </p>
         </div>
         <div id="heading">
@@ -24,9 +29,9 @@
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
+                    &emsp;-<%=order.size%> <%=order.sizeSpecifier%><br />
+                    <%if(order.spacing != 'NA'){%> &emsp;-<%=order.spacing%>
+                    spaced <br /><%}%>
                 </p>
                 <p class="date">Due date: <%=order.deadline%></p>
                 <div class="userid" style="display: none">
@@ -77,6 +82,13 @@
                 />
             </button>
         </div>
+        <div id="heading">
+            <% if(orders.length <= 0) {%>
+            <p class="h2">
+                There are no requested orders right now. Check again later.
+            </p>
+            <% } %>
+        </div>
         <div id="current">
             <% if(orders.length > 0) { %> <% orders.forEach(order => { %>
             <div class="con" id="<%=order.id%>">
@@ -85,9 +97,9 @@
                 <p class="class"><%=order.class.toUpperCase()%></p>
                 <p class="desc">
                     <%=order.type%><br />
-                    &emsp;-<%=order.details%><br />
-                    <%=order.size%> pages<br />
-                    &emsp;-<%=order.spacing%> spaced <br />
+                    &emsp;-<%=order.size%> <%=order.sizeSpecifier%><br />
+                    <%if(order.spacing != 'NA'){%> &emsp;-<%=order.spacing%>
+                    spaced <br /><%}%>
                 </p>
                 <br />
                 <p class="class">Requirements</p>

@@ -69,6 +69,11 @@
     min-width: 300px;
 }
 
+#topSection .right img {
+    height: 100%;
+    margin-right: 100px;
+}
+
 #topSection .right .estimator {
     width: 350px;
     height: 500px;
@@ -110,7 +115,7 @@
 }
 
 #top-divider {
-    margin-top: 100px;
+    margin-top: 70px;
     width: 100vw;
     display: flex;
     align-items: center;

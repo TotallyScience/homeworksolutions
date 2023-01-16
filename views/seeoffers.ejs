@@ -11,6 +11,8 @@
                 Your Offers
                 <span class="past" onclick="window.open('/orders','_self')"
                     >(Go to orders)</span
+                ><span class="past delete" onclick="deleteOrder('<%=orderid%>')"
+                    >(Delete this order)</span
                 >
             </p>
             <button onclick="location.reload();">
@@ -32,15 +34,13 @@
                         src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     />
                     <div>
-                        <p class="name">
-                            <%=offer.offererName.toUpperCase()%><span
+                        <p class="name"><%=offer.offererName.toUpperCase()%></p>
+
+                        <p class="reviews">
+                            (<%=offer.offererReviews%> reviews)<span
                                 class="review"
                                 >⭐<%=offer.stars%></span
                             >
-                        </p>
-
-                        <p class="reviews">
-                            (<%=offer.offererReviews%> reviews)
                         </p>
                     </div>
                 </div>
@@ -91,12 +91,25 @@
                 window.open('/orders', '_self');
             }
             async function Accept(orderid, helperid, amount) {
-                await fetch('acceptOffer', {
-                    method: 'POST',
-                    headers: { 'Content-type': 'application/json' },
-                    body: JSON.stringify({ orderid, helperid, amount }),
-                });
-                window.open('/orders', '_self');
+                // await fetch('acceptOffer', {
+                //     method: 'POST',
+                //     headers: { 'Content-type': 'application/json' },
+                //     body: JSON.stringify({ orderid, helperid, amount }),
+                // });
+                window.open(
+                    `/offer/offers/acceptOffer?orderid=${orderid}&helperid=${helperid}&amount=${amount}`,
+                    '_self'
+                );
+            }
+
+            function deleteOrder(orderid) {
+                if (
+                    confirm(
+                        'Are you sure you want to delete this order? You cannot undo this.'
+                    )
+                ) {
+                    window.open(`/orders/deleteOrder/${orderid}`, '_self');
+                }
             }
         </script>
     </body>

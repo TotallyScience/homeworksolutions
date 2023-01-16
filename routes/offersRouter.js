@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const Order = require('../models/order');
 const Account = require('../models/account');
 const Offer = require('../models/offer');
+const Message = require('../models/message');
 
 const { decodeToken } = require('../middleware/isLoggedIn.js');
 
@@ -15,7 +16,6 @@ router.post(
     bodyParser.urlencoded({ extended: true }),
     async (req, res) => {
         //get person who offer's id
-        console.log('hi');
         //get amount
         //get id of order
         //update the order with a new array in the offers
@@ -111,6 +111,47 @@ router.post(
     }
 );
 
+router.post('/offers/declineOffer', bodyParser.json(), async (req, res) => {
+    const { offerid, orderid } = req.body;
+    await removeOffer(orderid, offerid);
+});
+router.get('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
+    const { orderid, helperid, amount } = req.query;
+    const id = decodeToken(req.cookies.access_token).id;
+    let ordererid = await Order.findOne({ _id: orderid }).catch((err) => {
+        console.log(err);
+    });
+    if (ordererid.userid == id) {
+        await Order.updateOne(
+            { _id: orderid },
+            {
+                open: false,
+                helperid: helperid,
+                price: amount,
+            }
+        );
+
+        //send message to chatroom that chat started
+        if (id.localeCompare(helperid) >= 1) {
+            var room = id + helperid;
+        } else {
+            var room = helperid + id;
+        }
+        await req.io.to(room).emit('message', `/SERVER/STARTORDER/${orderid}`);
+
+        const messsage = new Message({
+            recipient: helperid,
+            sender: id,
+            message: `/SERVER/STARTORDER/${orderid}`,
+        });
+        await messsage.save().catch((err) => {
+            console.log(err);
+        });
+
+        res.redirect(`/chat/newchat?helper=${helperid}`);
+    }
+});
+
 router.get('/offers/:orderid', async (req, res) => {
     if (res.locals.isLoggedIn && !res.locals.isHelper) {
         const id = decodeToken(req.cookies.access_token).id;
@@ -149,34 +190,11 @@ router.get('/offers/:orderid', async (req, res) => {
             }
         });
 
-        res.render('seeoffers', { offers: offers });
+        res.render('seeoffers', { offers: offers, orderid: orderid });
     } else if (res.locals.isHelper) {
         res.redirect('/');
     } else {
         res.redirect('/account/signup');
-    }
-});
-
-router.post('/offers/declineOffer', bodyParser.json(), async (req, res) => {
-    const { offerid, orderid } = req.body;
-    await removeOffer(orderid, offerid);
-});
-router.post('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
-    const { orderid, helperid, amount } = req.body;
-    const id = decodeToken(req.cookies.access_token).id;
-    let ordererid = await Order.findOne({ _id: orderid }).catch((err) => {
-        console.log(err);
-    });
-    if (ordererid.userid == id) {
-        await Order.updateOne(
-            { _id: orderid },
-            {
-                open: false,
-                helperid: helperid,
-                price: amount,
-            }
-        );
-        res.redirect('/orders');
     }
 });
 

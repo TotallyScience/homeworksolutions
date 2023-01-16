@@ -8,6 +8,18 @@
     <% if(chatters.length > 0) { %>
     <body>
         <%- include('includes/navbar.ejs') %>
+        <%
+            convertTime = function(dateString)
+            {
+                let date = new Date(dateString);
+                let offset = date.getTimezoneOffset();
+                let adjustedDate = new Date(date.getTime() + offset); //taking away the multiplier of 60000 works
+                let options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                let formattedDate = adjustedDate.toLocaleString('en-US', options);
+                return(formattedDate);
+                
+            }
+        %>
         <div id="chatCon">
             <div class="chats">
                 <% chatters.forEach(chatter => {%>
@@ -43,37 +55,66 @@
                     <% chats.forEach(chat => { %>
                         <%if(chat.message.includes('/SERVER/CLIENTCOMPLETE/')){%>
                             <div class='server'>
-                                <p class="name bold">SERVER</p>
+                                <div class="topMessage">
+                                    <p class="name bold">SERVER</p>
+                                    <p class="time"><%=convertTime(chat.createdAt)%></p>
+                                </div>
                                 <p class="message">Order #<%=chat.message.replace("/SERVER/CLIENTCOMPLETE/", "")%> has been marked as complete. Thank you for using Homework Solutions.</p>
+                            </div>
+                        <%} else if (chat.message.includes('/SERVER/STARTORDER/')){ %>
+                            <div class='server'>
+                                <div class="topMessage">
+                                    <p class="name bold">SERVER</p>
+                                    <p class="time"><%=convertTime(chat.createdAt)%></p>
+                                </div>
+                                <p class="message">Your order has just started. You can talk to your helper here. This is Order #<%=chat.message.replace("/SERVER/STARTORDER/", "")%></p>
                             </div>
                         <%} else if (chat.message.includes('/SERVER/REVIEW/')){ %>
                             <div class='server'>
-                                <p class="name bold">SERVER</p>
+                                <div class="topMessage">
+                                    <p class="name bold">SERVER</p>
+                                    <p class="time"><%=convertTime(chat.createdAt)%></p>
+                                </div>
                                 <p class="message">Please click <a href="javascript:void(0)" onclick="openRating()">here</a> to leave a review for your helper.</p>
                             </div>
                         <%} else if (chat.message.includes('/SERVER/LEFTREVIEW/')){ %>
                             <div class='server'>
-                                <p class="name bold">SERVER</p>
+                                <div class="topMessage">
+                                    <p class="name bold">SERVER</p>
+                                    <p class="time"><%=convertTime(chat.createdAt)%></p>
+                                </div>
                                 <p class="message">Thank you for leaving a review for your helper.</p>
                             </div>
                         <%} else if (chat.message.includes('/SERVER/CANCELCOMPLETE/')){ %>
                             <div class='server'>
-                                <p class="name bold">SERVER</p>
+                                <div class="topMessage">
+                                    <p class="name bold">SERVER</p>
+                                    <p class="time"><%=convertTime(chat.createdAt)%></p>
+                                </div>
                                 <p class="message">Order #<%=chat.message.replace("/SERVER/CANCELCOMPLETE/", "")%> has been marked as incomplete.</p>
                             </div>
                         <%} else if (chat.message.includes('/SERVER/HELPERCOMPLETE/')){ %>
                             <div class='server'>
-                                <p class="name bold">SERVER</p>
+                                <div class="topMessage">
+                                    <p class="name bold">SERVER</p>
+                                    <p class="time"><%=convertTime(chat.createdAt)%></p>
+                                </div>
                                 <p class="message">The helper marked Order #<%=chat.message.replace("/SERVER/HELPERCOMPLETE/", "")%> as complete. If you feel the order is not complete, click <a href='/orders/completeOrder/cancel/<%=chat.message.replace("/SERVER/HELPERCOMPLETE/", "")%>' style="color:red" >here</a> to cancel the request. After 48 hours of no response it will automatically be set to complete.</a></p>
                             </div>
                         <%} else if (chat.message.includes('/SERVER/')){ %>
                         <div class='server'>
-                            <p class="name bold">SERVER</p>
+                            <div class="topMessage">
+                                <p class="name bold">SERVER</p>
+                                <p class="time"><%=convertTime(chat.createdAt)%></p>
+                            </div>
                             <p class="message">Files for Order #<%=chat.message.replace("/SERVER/", "")%> have been submited and are now downloadable <a href='/orders/downloadfiles/submitted/<%=chat.message.replace("/SERVER/", "")%>'>here.</a></p>
                         </div>
                         <%} else { %>
                         <div <%if(chat.sender == 'You'){%>class='you'<%}%>>
-                            <p class="name bold"><%=chat.sender%></p>
+                            <div class="topMessage">
+                                <p class="name bold"><%=chat.sender%></p>
+                                <p class="time"><%=convertTime(chat.createdAt)%></p>
+                            </div>
                             <p class="message"><%=chat.message%></p>
                         </div>
                     <% } }); } %>
@@ -106,6 +147,21 @@
 
 
         <script>
+
+            function convertTime(dateString)
+            {
+                let date = new Date(dateString);
+                let offset = date.getTimezoneOffset();
+                let adjustedDate = new Date(date.getTime() + offset); //taking away the multiplier of 60000 works
+                let options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                let formattedDate = adjustedDate.toLocaleString('en-US', options);
+                return(formattedDate);
+            }
+
+
+
+
+
             let starSelected = false;
             let trueRating = 0;
 
@@ -241,8 +297,24 @@
                     message = message.replace("/SERVER/CLIENTCOMPLETE/", "")
                     chatsEl.innerHTML += `
                     <div class='server'>
-                        <p class="name bold">SERVER</p>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">Order #${message} has been marked as complete. Thank you for using Homework Solutions.</p>
+                    </div>
+                    `
+                }
+                else if(message.includes('/SERVER/STARTORDER/'))
+                {
+                    message = message.replace("/SERVER/STARTORDER/", "")
+                    chatsEl.innerHTML += `
+                    <div class='server'>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
+                        <p class="message">Your order has just started. You can talk to your helper here. This is Order #${message}</p>
                     </div>
                     `
                 }
@@ -250,7 +322,10 @@
                 {
                     chatsEl.innerHTML += `
                     <div class='server'>
-                        <p class="name bold">SERVER</p>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">Please click <a href="javascript:void(0)" onclick="openRating()">here</a> to leave a review for your helper.</p>
                     </div>
                     `
@@ -259,7 +334,10 @@
                 {
                     chatsEl.innerHTML += `
                     <div class='server'>
-                        <p class="name bold">SERVER</p>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">Thank you for leaving a review for your helper.</p>
                     </div>
                     `
@@ -269,7 +347,10 @@
                     message = message.replace("/SERVER/CANCELCOMPLETE/", "")
                     chatsEl.innerHTML += `
                     <div class='server'>
-                        <p class="name bold">SERVER</p>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">Order #${message} has been marked as incomplete.</p>
                     </div>
                     `
@@ -279,7 +360,10 @@
                     message = message.replace("/SERVER/HELPERCOMPLETE/", "")
                     chatsEl.innerHTML += `
                     <div class='server'>
-                        <p class="name bold">SERVER</p>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">The helper marked Order #${message} as complete. If you feel the order is not complete, click <a href='/orders/completeOrder/cancel/${message}' style="color:red" >here</a> to cancel the request. After 48 hours of no response it will automatically be set to complete.</p>
                     </div>
                     `
@@ -289,7 +373,10 @@
                     message = message.replace("/SERVER/", "")
                     chatsEl.innerHTML += `
                     <div class='server'>
-                        <p class="name bold">SERVER</p>
+                        <div class="topMessage">
+                            <p class="name bold">SERVER</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">Files for Order #${message} have been submited and are now downloadable <a href='/orders/downloadfiles/submitted/${message}'>here.</a></p>
                     </div>
                     `
@@ -298,7 +385,10 @@
                 {
                     chatsEl.innerHTML += `
                     <div class='you'>
-                        <p class="name bold">You</p>
+                        <div class="topMessage">
+                            <p class="name bold">You</p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">${sendMessage.value}</p>
                     </div>
                     `
@@ -307,7 +397,10 @@
                 {
                     chatsEl.innerHTML += `
                     <div>
-                        <p class="name bold"><%=currentChatter.username%></p>
+                        <div class="topMessage">
+                            <p class="name bold"><%=currentChatter.username%></p>
+                            <p class="time">${convertTime(new Date(Date.now()))}</p>
+                        </div>
                         <p class="message">${message}</p>
                     </div>
                     `

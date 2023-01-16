@@ -10,32 +10,53 @@
         <form method="post" enctype="multipart/form-data">
             <div id="top-bar">
                 <p style="color: red"><%=locals.error%></p>
-                <div>
+                <!-- <div>
                     <p class="heading">Class:</p>
-                    <p class="class"><%=locals.class?.toUpperCase()%></p>
+                    <p class="class"><%=//locals.class?.toUpperCase()%></p>
+                </div> -->
+                <div>
+                    <p class="heading">Subject:</p>
+                    <select name="subject" id="subjectSelect">
+                        <option id="WritingSubject" value="Writing">Writing</option>
+                        <option id="MathSubject" value="Math">Math</option>
+                        <option id="ScienceSubject" value="Science">Science</option>
+                        <option id="HistorySubject" value="History">History</option>
+                        <option id="ProgrammingSubject" value="Programming">Programming</option>
+                        <option id="OtherSubject" value="Other">Other</option>
+                    </select>
+                    <input id="othersubject" style="display:none;" type="text" placeholder="Specify the subject" name="othersubject" value="<%=locals.form?.othersubject%>"/>
                 </div>
                 <div>
                     <p class="heading">Assignment Type:</p>
-                    <select name="type">
-                        <option value="Essay">Essay</option>
-                        <option value="Paragraph">Paragraph</option>
-                    </select>
-                </div>
-                <div>
-                    <p class="heading">Assignment Details:</p>
-                    <select name="details">
-                        <option value="Writing">Writing</option>
-                        <option value="Rewriting">Rewriting</option>
-                        <option value="Editing">Editing</option>
-                        <option value="Proofreading">Proofreading</option>
-                        <option value="Problem Solving">Problem Solving</option>
-                        <option value="Calculations">Calculations</option>
+                    <select name="type" id="typeSelect">
+                        <optgroup label="Other">
+                            <option sizespecifier="questions" id="Multiple choice questionsType">Multiple choice questions</option>
+                        </optgroup>
+                        <optgroup label="Writing">
+                            <option sizespecifier="pages" id="EssayType">Essay</option>
+                            <option sizespecifier="pages" id="ParagraphType">Paragraph</option>
+                        </optgroup>
+                        <optgroup label="Math">
+                            <option sizespecifier="questions" id="CalculationsType">Calculations</option>
+                            <option sizespecifier="questions" id="Problem solvingType">Problem solving</option>
+                        </optgroup>
+                        <optgroup label="Science">
+                            <option sizespecifier="questions" id="LabType">Lab</option>
+                        </optgroup>
+                        <optgroup label="History">
+                            <option sizespecifier="pages" id="Historical essayType">Historical essay</option>
+                            <option sizespecifier="questions" id="Short response questionsType">Short response questions</option>
+                        </optgroup>
+                        <optgroup label="Programming">
+                            <option sizespecifier="lines" id="Writing a programType">Writing a program</option>
+                            <option sizespecifier="lines" id="Bug fixingType">Bug fixing</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div>
                     <p class="heading">Assignment Size:</p>
-                    <input type="number" placeholder="# of Pages" name="size" value="<%=locals.form?.size%>"/>
-                    <select name="spacing">
+                    <input id="sizeInput" type="number" placeholder="# of questions" name="size" value="<%=locals.form?.size%>"/>
+                    <select id="spacingSelect" name="spacing" style="display: none;">
                         <option value="Double">Double Spaced</option>
                         <option <%if(locals.form?.spacing == "Single"){%> selected="selected" <%}%> value="Single">Single Spaced</option>
                     </select>
@@ -73,10 +94,61 @@
                     <input type="file" name="pdf" multiple />
                 </div>
 
+                <input type="hidden" id="sizeSpecifier" name="sizeSpecifier" value="questions">
+
                 <button class="common-button" type="submit">
                     Submit your order
                 </button>
             </div>
         </form>
+        <script>
+            let subject = document.getElementById("subjectSelect");
+            subject.addEventListener('change', function() {
+                if(subject.value == "Other")
+                {
+                    document.getElementById('othersubject').style.display = '';
+                }
+                else
+                {
+                    document.getElementById('othersubject').style.display = 'none';
+                }
+            });
+
+            let type = document.getElementById("typeSelect");
+            type.addEventListener('change', function() {
+                let sizeSpecifier = document.getElementById(`${type.value}Type`).getAttribute('sizespecifier');
+                document.getElementById('sizeInput').setAttribute('placeholder', `# of ${sizeSpecifier}`);
+                document.getElementById('sizeSpecifier').value = sizeSpecifier;
+                if(sizeSpecifier == 'pages')
+                {
+                    document.getElementById('spacingSelect').style.display = "";
+                }
+                else
+                {
+                    document.getElementById('spacingSelect').style.display = "none";
+                }
+            });
+
+            if('<%=locals.form?.sizeSpecifier%>' != '')
+            {
+                document.getElementById('sizeSpecifier').value = '<%=locals.form?.sizeSpecifier%>';
+            }
+
+            if('<%=locals.form?.subject%>' != '')
+            {
+                console.log("<%=locals.form?.subject%>Subject");
+                document.getElementById("<%=locals.form?.subject%>Subject").setAttribute('selected', 'selected');
+                if('<%=locals.form?.subject%>' == 'Other')
+                {
+                    document.getElementById('othersubject').style.display = '';
+                }
+            }
+
+            if('<%=locals.form?.type%>' != '')
+            {
+                console.log("<%=locals.form?.type%>Type");
+                document.getElementById("<%=locals.form?.type%>Type").setAttribute('selected', 'selected');
+            }
+        </script>
     </body>
 </html>

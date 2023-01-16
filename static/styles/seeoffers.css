@@ -18,6 +18,11 @@ body {
     cursor: pointer;
 }
 
+#heading .past.delete {
+    color: red;
+    margin-left: 10px;
+}
+
 #heading .h2 {
     margin-top: 10px;
     font-size: 1.6rem;
@@ -325,6 +330,8 @@ body {
     display: flex;
     gap: 50px;
     margin-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 #helpers .helper .top div {
@@ -338,9 +345,7 @@ body {
 }
 
 #helpers .helper .top div .review {
-    font-size: 1.02rem;
     margin-left: 5px;
-    display: flex;
 }
 
 #helpers p {
