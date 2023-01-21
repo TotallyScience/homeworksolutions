@@ -13,7 +13,7 @@ router.get('/signup', (req, res) => {
 router.post(
     '/signup',
     bodyParser.urlencoded({ extended: true }),
-    (req, res) => {
+    async (req, res) => {
         const { email, username, password, confirmPassword } = req.body;
 
         let error = '';
@@ -22,6 +22,10 @@ router.post(
             error = '*Passwords must be atleast 8 characters';
         } else if (password !== confirmPassword) {
             error = "*Passwords don't match";
+        } else if (await Account.find({ username: username })) {
+            error = '*That username is taken';
+        } else if (await Account.find({ email: email })) {
+            error = '*That email is taken';
         }
 
         if (error != '') {
