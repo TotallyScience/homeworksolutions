@@ -172,6 +172,7 @@ router.post('/review', bodyParser.json(), async (req, res) => {
         let verifyOrder = await Order.findOne({
             helperid: helperid,
             userid: id,
+            reviewLeft: false,
         }).catch((err) => {
             console.log(err);
         });
@@ -207,6 +208,13 @@ router.post('/review', bodyParser.json(), async (req, res) => {
                 { $set: { stars: '$newStars' } },
                 { $set: { reviews: '$reviews' } },
             ]);
+
+            await Order.updateOne(
+                { _id: orderid },
+                {
+                    reviewLeft: true,
+                }
+            );
 
             await Message.deleteOne({ message: `/SERVER/REVIEW/` });
 

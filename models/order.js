@@ -67,6 +67,10 @@ const orderSchema = new Schema(
             type: Boolean,
             required: true,
         },
+        reviewLeft: {
+            type: Boolean,
+            required: true,
+        },
         helperCompletedDate: {
             type: Date,
         },

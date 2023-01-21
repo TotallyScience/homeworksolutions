@@ -1,3 +1,7 @@
+body {
+    margin-bottom: 100px;
+}
+
 #topSection {
     display: flex;
     flex-wrap: wrap;

@@ -112,6 +112,7 @@ router.post(
                 completed: false,
                 files: files,
                 fileTypes: fileTypes,
+                reviewLeft: false,
             });
             order.save().catch((err) => {
                 console.log(err);
