@@ -11,7 +11,7 @@ const ordersRouter = require('./routes/ordersRouter');
 const offersRouter = require('./routes/offersRouter');
 const chatRouter = require('./routes/chatRouter');
 
-const { checkLogin } = require('./middleware/isLoggedIn.js');
+const { checkLogin, requireLogin } = require('./middleware/isLoggedIn.js');
 
 const app = express();
 const http = require('http').Server(app);
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/order', (req, res) => {
+app.get('/order', requireLogin, (req, res) => {
     res.render('order', { order: 'selected' });
 });
 
