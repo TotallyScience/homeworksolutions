@@ -114,6 +114,7 @@ router.post(
 router.post('/offers/declineOffer', bodyParser.json(), async (req, res) => {
     const { offerid, orderid } = req.body;
     await removeOffer(orderid, offerid);
+    res.send('success');
 });
 router.get('/offers/acceptOffer', bodyParser.json(), async (req, res) => {
     const { orderid, helperid, amount } = req.query;
