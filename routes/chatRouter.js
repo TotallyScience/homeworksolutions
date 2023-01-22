@@ -240,9 +240,9 @@ router.post('/review', bodyParser.json(), async (req, res) => {
     }
 });
 
-router.get('/deleteall', async (req, res) => {
-    await Message.deleteMany({});
-    res.redirect('/chat');
-});
+// router.get('/deleteall', async (req, res) => {
+//     await Message.deleteMany({});
+//     res.redirect('/chat');
+// });
 
 module.exports = router;

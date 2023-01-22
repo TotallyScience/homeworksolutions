@@ -145,11 +145,11 @@ router.get('/helperCompletedOrders', requireHelper, async (req, res) => {
     });
 });
 
-router.get('/deleteall', async (req, res) => {
-    await Offer.deleteMany({});
-    await Order.deleteMany({});
-    res.redirect('/orders');
-});
+// router.get('/deleteall', async (req, res) => {
+//     await Offer.deleteMany({});
+//     await Order.deleteMany({});
+//     res.redirect('/orders');
+// });
 
 router.get('/completedorder/:orderid', async (req, res) => {
     if (res.locals.isLoggedIn && !res.locals.isHelper) {
