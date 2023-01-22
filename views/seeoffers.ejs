@@ -81,9 +81,7 @@
         </div>
         <script>
             async function Decline(offerid, orderid, divid) {
-                console.log(offerid);
-                console.log(orderid);
-                await fetch('declineOffer', {
+                fetch('declineOffer', {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify({ offerid, orderid }),
