@@ -177,7 +177,7 @@ router.post('/review', bodyParser.json(), async (req, res) => {
             console.log(err);
         });
 
-        if (verifyOrder) {
+        if (verifyOrder != false) {
             await Account.updateOne({ _id: helperid }, [
                 {
                     $addFields: {
