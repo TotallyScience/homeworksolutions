@@ -19,7 +19,7 @@ router.post(
         let error = '';
 
         if (password.length < 8) {
-            error = '*Passwords must be atleast 8 characters';
+            error = '*Passwords must be at least 8 characters';
         } else if (password !== confirmPassword) {
             error = "*Passwords don't match";
         } else if ((await Account.findOne({ username: username })) != null) {

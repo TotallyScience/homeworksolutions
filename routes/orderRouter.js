@@ -45,7 +45,8 @@ router.post(
             type.length < 1 ||
             size.length < 1 ||
             deadline.length < 1 ||
-            spacing.length < 1
+            spacing.length < 1 ||
+            instructions.length < 1
         ) {
             error = '*You must fill out all details';
         } else if (subject == 'Other' && othersubject == '') {
