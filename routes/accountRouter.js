@@ -22,9 +22,9 @@ router.post(
             error = '*Passwords must be atleast 8 characters';
         } else if (password !== confirmPassword) {
             error = "*Passwords don't match";
-        } else if (await Account.find({ username: username })) {
+        } else if ((await Account.findOne({ username: username })) != null) {
             error = '*That username is taken';
-        } else if (await Account.find({ email: email })) {
+        } else if ((await Account.findOne({ email: email })) != null) {
             error = '*That email is taken';
         }
 
