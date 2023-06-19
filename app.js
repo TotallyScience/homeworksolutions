@@ -16,6 +16,8 @@ const { checkLogin, requireLogin } = require('./middleware/isLoggedIn.js');
 const app = express();
 const http = require('http').Server(app);
 
+const port = process.env.PORT || 3000;
+
 const io = require('socket.io')(http);
 require('./chatSocket.js').createSocket(io);
 
@@ -25,11 +27,10 @@ app.use(function (req, res, next) {
 });
 
 //connect to mongodb
-const dbURI =
-    'mongodb+srv://zach:Homeworksecure4321@homeworksolutions.f1vjlb4.mongodb.net/homeworksolutions?retryWrites=true&w=majority';
+const dbURI = 'mongodb+srv://zach:Homeworksecure4321@homeworksolutions.f1vjlb4.mongodb.net/homeworksolutions?retryWrites=true&w=majority';
 mongoose
     .connect(dbURI)
-    .then((result) => http.listen(3000))
+    .then((result) => http.listen(port))
     .catch((err) => console.log(err));
 
 app.set('view engine', 'ejs');
